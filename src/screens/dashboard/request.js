@@ -65,7 +65,7 @@ const Request = (props) => {
 //       console.log(selected)
 //       setState({categoryTypes: selected})
 //   }
-
+  const [selectedValue, setSelectedValue] = useState("java");
   const loadCatTypes = () => {
     return categories.map(cat_type => (
        <Picker.Item key={cat_type.id} label={cat_type.name} value={cat_type.name} />
@@ -97,12 +97,17 @@ const Request = (props) => {
         <View style={styles.categoryDropdown}>
             {/* fix */}
             <Picker
-                mode={'dropdown'}
-                selectedValue={state.selected}
-                onValueChange={(itemValue, itemIndex) => setState({selected: itemValue})}>
-                {loadCatTypes()}
-            </Picker>
-        </View>     
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                  >
+                    <Picker.Item label="Java" value="java" />
+                    <Picker.Item label="JavaScript" value="erfd" />
+                    <Picker.Item label="Python" value="ewrr" />
+                    <Picker.Item label="PHP" value="bf" />
+                    <Picker.Item label="Ruby" value="rerg" />
+                    <Picker.Item label="C++" value="dfgg" />
+                  </Picker>
+        </View>
     </View>
   );
 }
