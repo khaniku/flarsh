@@ -10,4 +10,15 @@ export default {
         shadowOpacity: 0,
         elevation: 0,
     },
+    headerStyleDiscover: {
+        backgroundColor: "transparent" ,
+        // height: hp('6%'),
+        borderBottomWidth: 0,
+        shadowOffset: {height: 0, width: 0},
+        shadowOpacity: 0,
+        elevation: 0,
+        position: 'absolute', 
+        top: 100, 
+        left: 50
+    }
 };

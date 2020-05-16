@@ -5,7 +5,8 @@ import {
   View,
   Animated,
   Image,
-  Dimensions
+  Dimensions,
+  FlatList
 } from "react-native";
 import {Rating} from 'react-native-elements';
 import MapView from "react-native-maps";
@@ -131,19 +132,9 @@ export default function Discover({ navigation }) {
             ref={mapRef}
             initialRegion={region}
             //provider = {MapView.PROVIDER_GOOGLE}
-            style={styles.container}
+            style={StyleSheet.absoluteFillObject}
           >
-          <Header
-            style={styles.headerStyle}
-              transparent
-          >
-         <Left style={{ flex: 1 }}>
-                <Button  transparent onPress={() => navigation.openDrawer()}>
-                    <MaterialCommunityIcons name="menu" size={30} color="black" />
-                </Button>
-            </Left>
-         </Header>
-          
+
             {markers.map((marker, index) => {
               const scaleStyle = {
                 transform: [
@@ -155,7 +146,7 @@ export default function Discover({ navigation }) {
               const opacityStyle = {
                 opacity: interpolations[index].opacity,
               };
-  
+
               return (
                 <MapView.Marker key={index} coordinate={marker.coordinate}>
                   <Animated.View style={[styles.markerWrap, opacityStyle]}>
@@ -166,7 +157,16 @@ export default function Discover({ navigation }) {
               );
             })}
           </MapView>
-          
+          <Header
+              style={styles.headerStyleDiscover}
+                transparent
+            >
+          <Left style={{ flex: 1 }}>
+                  <Button  transparent onPress={() => navigation.openDrawer()}>
+                      <MaterialCommunityIcons name="menu" size={30} color="black" />
+                  </Button>
+              </Left>
+          </Header>
           <Animated.ScrollView
             horizontal
             scrollEventThrottle={1}
@@ -187,18 +187,23 @@ export default function Discover({ navigation }) {
             style={styles.scrollView}
             contentContainerStyle={styles.endPadding}
           >
-            {markers.map((marker, index) => (
-              <TouchableOpacity key={index}  onPress={() => navigation.navigate('Login')}>
+            <FlatList
+            data={markers}
+            contentContainerStyle={{
+              flexDirection: 'row',
+            }}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity key={index}  onPress={() => navigation.navigate('bookmark')}>
                 <View style={styles.card}  key={index}>
                   <Image
-                  source={marker.image}
+                  source={item.image}
                   style={styles.cardImage}
                   resizeMode="cover"
                   />
                   <View style={styles.textContent}>
-                  <Text numberOfLines={1} style={styles.cardtitle}>{marker.name}</Text>
+                  <Text numberOfLines={1} style={styles.cardtitle}>{item.name}</Text>
                   <Text numberOfLines={1} style={styles.cardDescription}>
-                      {marker.description}
+                      {item.description}
                   </Text>
                   </View>
                   <View>
@@ -216,7 +221,9 @@ export default function Discover({ navigation }) {
                 </View>
               </TouchableOpacity>
 
-            ))}
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              />
           </Animated.ScrollView>
         </View>
       );
@@ -226,7 +233,10 @@ export default function Discover({ navigation }) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      zIndex: -1,
+      position: 'relative'
+    },
+    map: {
+      flex: 1
     },
     scrollView: {
       position: "absolute",
@@ -366,7 +376,7 @@ const styles = StyleSheet.create({
     nearbyText: {
       fontSize:16,
     },
-    headerStyle:{
+    headerStyleDiscover:{
       backgroundColor: "transparent" ,
       // height: hp('6%'),
       borderBottomWidth: 0,

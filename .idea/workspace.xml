@@ -2,7 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53b9c4bd-2d87-42aa-b069-f240876acc42" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/font/argon.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/font/argon.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/android.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/argon-logo-onboarding.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/argon-logo-onboarding@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/argon-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/argon-logo@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/argonlogo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/getPro-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/getPro-bg@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/ios.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/profile-screen-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/register-bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/imgs/splash.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Button.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Card.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DrawerItem.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Header.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Icon.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Input.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Select.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Switch.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Tabs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/Images.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/Theme.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/articles.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/tabs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/constants/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sidebar/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/bookmark/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/bookmark/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/dashboard/discover.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/dashboard/discover.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/dashboard/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/dashboard/request.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/dashboard/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/dashboard/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/payment/card.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/payment/card.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/payment/payments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/payment/payments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/profile/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +67,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="82" column="31" selection-start-line="82" selection-start-column="31" selection-end-line="82" selection-end-column="31" />
+            <state relative-caret-position="511">
+              <caret line="90" column="31" selection-start-line="90" selection-start-column="31" selection-end-line="90" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -42,8 +85,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/screens/home.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="10" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+            <state relative-caret-position="425">
+              <caret line="25" column="10" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -57,20 +100,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/screens/dashboard/discover.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
+            <state relative-caret-position="697">
+              <caret line="158" column="20" lean-forward="true" selection-start-line="130" selection-start-column="10" selection-end-line="158" selection-end-column="20" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/screens/dashboard/request.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="749">
-              <caret line="107" column="56" selection-start-line="107" selection-start-column="56" selection-end-line="107" selection-end-column="56" />
+            <state relative-caret-position="391">
+              <caret line="113" column="39" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -94,6 +137,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/screens/dashboard/request.js" />
+        <option value="$PROJECT_DIR$/src/screens/dashboard/discover.js" />
       </list>
     </option>
   </component>
@@ -213,8 +257,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="82" column="31" selection-start-line="82" selection-start-column="31" selection-end-line="82" selection-end-column="31" />
+        <state relative-caret-position="511">
+          <caret line="90" column="31" selection-start-line="90" selection-start-column="31" selection-end-line="90" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -233,8 +277,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/screens/home.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="10" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+        <state relative-caret-position="425">
+          <caret line="25" column="10" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -245,17 +289,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/screens/dashboard/discover.js">
+    <entry file="file://$PROJECT_DIR$/src/screens/dashboard/request.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
-          <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
+          <caret line="113" column="39" selection-start-line="113" selection-start-column="39" selection-end-line="113" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/screens/dashboard/request.js">
+    <entry file="file://$PROJECT_DIR$/src/screens/dashboard/discover.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="749">
-          <caret line="107" column="56" selection-start-line="107" selection-start-column="56" selection-end-line="107" selection-end-column="56" />
+        <state relative-caret-position="697">
+          <caret line="158" column="20" lean-forward="true" selection-start-line="130" selection-start-column="10" selection-end-line="158" selection-end-column="20" />
         </state>
       </provider>
     </entry>
