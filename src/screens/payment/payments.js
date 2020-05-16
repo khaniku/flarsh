@@ -10,7 +10,7 @@ export default function Payment(props) {
     return (
         <Container>
             <StatusBar barStyle="light-content" />
-            <Appbar.Header style={{backgroundColor: '#000'}}>
+            <Appbar.Header style={{backgroundColor: '#fff'}}>
                 <Appbar.Action icon="close"
                 onPress={() => props.navigation.goBack()}
                 />

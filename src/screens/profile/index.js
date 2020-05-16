@@ -1,140 +1,261 @@
-import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, Button, StatusBar } from 'react-native';
+import React, { Component, useState } from 'react';
+import {  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Image,
+  ImageBackground,
+  Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Card } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
+import { Block, Text, theme } from "galio-framework";
+import { Button } from "../../components";
+import { Images, argonTheme } from "../../constants";
+import { HeaderHeight } from "../../constants/utils";
+import { TextInput } from 'react-native-paper';
+import { Input } from 'react-native-elements';
+import { MaterialIcons } from '@expo/vector-icons'; 
+
+const { width, height } = Dimensions.get("screen");
+
+const thumbMeasure = (width - 48 - 32) / 3;
 
 export default function Profile(props) {
+  const [email, setEmail] = useState("jessica@gmail.com");
+  const [password, setPassword] = useState("password");
 
-    return (
-        <View style = {styles.container}>
-            <StatusBar barStyle="light-content" />
-            <Appbar.Header style={{backgroundColor: '#000'}}>
-                <Appbar.Action icon="close"
-                onPress={() => props.navigation.goBack()}
+  return (
+    <Block flex style={styles.profile}>
+      <Block flex>
+        <ImageBackground
+          source={Images.ProfileBackground}
+          style={styles.profileContainer}
+          imageStyle={styles.profileBackground}
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ width, marginTop: '25%' }}
+          >
+            <Block flex style={styles.profileCard}>
+              <Block middle style={styles.avatarContainer}>
+                <Image
+                  source={{ uri: Images.ProfilePicture }}
+                  style={styles.avatar}
                 />
-                <Appbar.Content
-                title="Profile"
-                />
-            </Appbar.Header>
-           <View style={{backgroundColor: '#000'}}>
-             <View style={styles.profileTop}>
-               <View style={styles.detailsHolder}>
-                 <Image source = {require('../../../assets/default.png')} style = {styles.profilePhoto}/>
-                 <Text style={styles.username}>Kanikwu Emeka</Text>
-                 <Text style={styles.userLocation}>Abuja, Nigeria</Text>
-               </View>
-             </View>
-           </View>                         
-           <View style={styles.profileBottom}>
-             <Card style={styles.phoneNumber}>
-               <View style={styles.phoneHolder}>
-                 <Feather name="phone"  style={styles.phoneIcon} />
-                 <View style={styles.numberDetails}>
-                   <Text style={styles.phone}>Phone Number</Text>
-                   <Text style={styles.userNumber}>0706 239 1349</Text>
-                 </View>
-               </View>
-             </Card>
-             <Card style={styles.phoneNumber}>
-               <View style={styles.phoneHolder}>
-                 <MaterialCommunityIcons name="email"  style={styles.phoneIcon} />
-                 <View style={styles.numberDetails}>
-                   <Text style={styles.phone}>Email</Text>
-                   <Text style={styles.userNumber}>flarsh@gmail.com</Text>
-                 </View>
-               </View>
-             </Card>
-             <Card style={styles.phoneNumber}>
-               <View style={styles.phoneHolder}>
-                 <MaterialCommunityIcons name="lock"  style={styles.phoneIcon} />
-                 <View style={styles.numberDetails}>
-                   <Text style={styles.phone}>Password</Text>
-                   <Text style={styles.userNumber}>xxxxxxx</Text>
-                 </View>
-               </View>
-             </Card>
-           </View>
-       </View>
-     );
+              </Block>
+              <Block style={styles.info}>
+                {/* <Block
+                  middle
+                  row
+                  space="evenly"
+                  style={{ marginTop: 20, paddingBottom: 24 }}
+                >
+                  <Button
+                    small
+                    style={{ backgroundColor: argonTheme.COLORS.INFO }}
+                  >
+                    CONNECT
+                  </Button>
+                  <Button
+                    small
+                    style={{ backgroundColor: argonTheme.COLORS.DEFAULT }}
+                  >
+                    MESSAGE
+                  </Button>
+                </Block> */}
+                {/* <Block row space="between">
+                  <Block middle>
+                    <Text
+                      bold
+                      size={18}
+                      color="#525F7F"
+                      style={{ marginBottom: 4 }}
+                    >
+                      2K
+                    </Text>
+                    <Text size={12} color={argonTheme.COLORS.TEXT}>Orders</Text>
+                  </Block>
+                  <Block middle>
+                    <Text
+                      bold
+                      color="#525F7F"
+                      size={18}
+                      style={{ marginBottom: 4 }}
+                    >
+                      10
+                    </Text>
+                    <Text size={12} color={argonTheme.COLORS.TEXT}>Photos</Text>
+                  </Block>
+                  <Block middle>
+                    <Text
+                      bold
+                      color="#525F7F"
+                      size={18}
+                      style={{ marginBottom: 4 }}
+                    >
+                      89
+                    </Text>
+                    <Text size={12} color={argonTheme.COLORS.TEXT}>Comments</Text>
+                  </Block>
+                </Block> */}
+              </Block> 
+              <Block flex>
+                <Block middle style={styles.nameInfo}>
+                  <Text bold size={28} color="#32325D">
+                    Jessica Jones
+                  </Text>
+                  <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                    San Francisco, USA
+                  </Text>
+                </Block>
+                <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                  <Block style={styles.divider} />
+                </Block>
+                <Block left>
+                  {/* <Text
+                    size={16}
+                    color="#525F7F"
+                    style={{ textAlign: "center" }}
+                  >
+                    Email
+                  </Text> */}
+                  {/* <TextInput
+                    label='Email'
+                    value={email}
+                    style={{ width: "100%" }}
+                    onChangeText={text => setEmail({ text })}
+                  /> */}
+                  <Input
+                    placeholder='Email'
+                    value={email}
+                    onChangeText={text => setEmail({ text })}
+                    leftIcon={
+                      <MaterialIcons name="email" size={24} color="black" />
+                    }
+                  />
+                  {/* <Button
+                    color="transparent"
+                    textStyle={{
+                      color: "#233DD2",
+                      fontWeight: "500",
+                      fontSize: 16
+                    }}
+                  >
+                    Show more
+                  </Button> */}
+                </Block>   
+                <Block left>
+                <Input
+                    placeholder='Password'
+                    value={password}
+                    onChangeText={text => setPassword({ text })}
+                    secureTextEntry={true}
+                    leftIcon={
+                      <MaterialIcons name="lock" size={24} color="black" />
+                    }
+                  />
+                </Block>
+                {/* <Block
+                  row
+                  style={{ paddingVertical: 14, alignItems: "baseline" }}
+                >
+                  <Text bold size={16} color="#525F7F">
+                    Album
+                  </Text>
+                </Block>
+                <Block
+                  row
+                  style={{ paddingBottom: 20, justifyContent: "flex-end" }}
+                >
+                  <Button
+                    small
+                    color="transparent"
+                    textStyle={{ color: "#5E72E4", fontSize: 12 }}
+                  >
+                    View all
+                  </Button>
+                </Block>
+                <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
+                  <Block row space="between" style={{ flexWrap: "wrap" }}>
+                    {Images.Viewed.map((img, imgIndex) => (
+                      <Image
+                        source={{ uri: img }}
+                        key={`viewed-${img}`}
+                        resizeMode="cover"
+                        style={styles.thumb}
+                      />
+                    ))}
+                  </Block>
+                </Block> */}
+              </Block>
+            </Block>
+          </ScrollView>
+        </ImageBackground>
+      </Block>
+    </Block>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    profileTop: {
-      height:'45%',
-      width:'100%',
-      alignItems:'center',
-      marginTop:0,
-      position: 'relative',
-    },
-    profileBottom: {
-      height:'55%',
-      width:'94%',
-      marginLeft: 10,
-    },
-    profilePhoto: {
-      height: 100,
-      width: 100,
-      borderRadius: 50,
-      alignItems: 'center',
-      marginLeft: 23
-    },
-    username: {
-      fontWeight:'bold',
-      fontSize:20,
-      color:'white',
-      marginTop:10,
-      fontFamily:'Times New Roman'
-    },
-    linearGradient: {
-      flex: 1,
-      paddingLeft: 15,
-      paddingRight: 15,
-    },
-    detailsHolder: {
-      position: 'absolute',
-      bottom: -85,
-    },
-    userLocation: {
-      fontSize:15,
-      color:'#ccc',
-      fontFamily:'Times New Roman',
-      fontStyle: 'italic',
-      marginLeft: 23
-    },
-    phoneNumber: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.8,
-      shadowRadius: 2,  
-      elevation: 3,
-      marginTop: 20,
-      paddingTop: 10,
-      height: 60
-    },
-    phone: {
-      color: '#8e8e8e',
-    },
-    userNumber: {
-  
-    },
-    phoneHolder:{
-      marginLeft: 10,
-      position: 'relative',
-    },
-    phoneIcon: {
-      position: 'absolute',
-      bottom: 5,
-      fontSize: 20
-    },
-    numberDetails: {
-      left:30    
-    }
-  });
+  profile: {
+    marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
+    // marginBottom: -HeaderHeight * 2,
+    flex: 1
+  },
+  profileContainer: {
+    width: width,
+    height: height,
+    padding: 0,
+    zIndex: 1
+  },
+  profileBackground: {
+    width: width,
+    height: height / 2
+  },
+  profileCard: {
+    // position: "relative",
+    padding: theme.SIZES.BASE,
+    marginHorizontal: theme.SIZES.BASE,
+    marginTop: 65,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    backgroundColor: theme.COLORS.WHITE,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    zIndex: 2
+  },
+  info: {
+    paddingHorizontal: 40
+  },
+  avatarContainer: {
+    position: "relative",
+    marginTop: -80
+  },
+  avatar: {
+    width: 124,
+    height: 124,
+    borderRadius: 62,
+    borderWidth: 0
+  },
+  nameInfo: {
+    marginTop: 35
+  },
+  divider: {
+    width: "90%",
+    borderWidth: 1,
+    borderColor: "#E9ECEF"
+  },
+  thumb: {
+    borderRadius: 4,
+    marginVertical: 4,
+    alignSelf: "center",
+    width: thumbMeasure,
+    height: thumbMeasure
+  }
+});
+
   
 

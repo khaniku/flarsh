@@ -13,12 +13,12 @@ export default function Card(props) {
     return(
         <Container>
           <StatusBar barStyle="light-content" />
-            <Appbar.Header style={{backgroundColor: '#000'}}>
+            <Appbar.Header style={{backgroundColor: '#fff'}}>
                 <Appbar.BackAction 
                 onPress={() => props.navigation.goBack()}
                 />
                 <Appbar.Content
-                title="Payment"
+                title="Add Card"
                 />
             </Appbar.Header>
           <Content style={{marginTop: 20}}>

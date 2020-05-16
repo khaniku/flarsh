@@ -8,8 +8,10 @@ import Main from './screens/home';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { Root } from "native-base";
 import FlashMessage from "react-native-flash-message";
-import { Provider as PaperProvider , DarkTheme as PaperDarkTheme} from 'react-native-paper';
-import { NavigationContainer, useLinking } from '@react-navigation/native';
+import { Provider as PaperProvider , DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperDefaultTheme} from 'react-native-paper';
+import { NavigationContainer, useLinking, DefaultTheme as NavigationDefaultTheme,
+        DarkTheme as NavigationDarkTheme} from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from "redux";
 import thunk from 'redux-thunk';
@@ -20,6 +22,12 @@ import { Asset } from 'expo-asset';
 
 Asset;
 const Stack = createStackNavigator();
+
+const CombinedDefaultTheme = {
+  ...PaperDefaultTheme,
+  ...NavigationDefaultTheme,
+};
+const CombinedDarkTheme = { ...PaperDarkTheme, ...NavigationDarkTheme };
 
 function AuthStack() {
   return (
@@ -81,12 +89,18 @@ const store = createStore(persistedReducer, applyMiddleware(thunk));
 let persistor = persistStore(store);
 
 export default function App() {
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const theme = isDarkTheme ? CombinedDarkTheme : CombinedDefaultTheme; // Use Light/Dark theme based on a state
+  function toggleTheme() {
+    console.log("here")
+    // We will pass this function to Drawer and invoke it on theme switch press
+    setIsDarkTheme(isDark => !isDark);
+  }
 
   return (
     <Provider store={store}>
       <PersistGate loading={renderLoading()} persistor={persistor}>
         <Root>
-          {/* <StatusBar barStyle="dark-content" hidden={true}  /> */}
           <PaperProvider>
             <NavigationContainer>
               <Main />

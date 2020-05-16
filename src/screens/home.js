@@ -6,7 +6,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import Map from './dashboard';
 import DrawerContent from '../components/sidebar'
 import LoginScreen from "./auth/login";
@@ -15,7 +15,9 @@ import * as Permissions from 'expo-permissions';
 import bookmark from './bookmark';
 import Profile from './profile';
 import Payment from './payment';
-
+import {
+    useTheme
+  } from 'react-native-paper';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -34,13 +36,20 @@ function Login() {
 
 function mainStack() {
     return(
-        <Stack.Navigator>
+        <Stack.Navigator
+        screenOptions={{
+            gestureEnabled: true,
+            cardOverlayEnabled: true,
+            ...TransitionPresets.ModalPresentationIOS,
+          }}
+          mode="modal"
+        >
         <Stack.Screen name="Map" options={{
             headerShown: false
             }}
             component={Map} />
         <Stack.Screen name="bookmark" options={{
-            headerShown: false
+            headerShown: false,
             }}
             component={bookmark} />
         <Stack.Screen name="profile" options={{
@@ -56,8 +65,9 @@ function mainStack() {
 }
 
 function mainDrawer() {
+    const paperTheme = useTheme();
   return (
-    <Drawer.Navigator drawerContent={props => DrawerContent(props)}>
+    <Drawer.Navigator drawerContent={props => DrawerContent(props, paperTheme)}>
         <Drawer.Screen name="Home" options={{
           headerStyle: {
             backgroundColor: 'transparent',
@@ -88,7 +98,7 @@ async function registerForPushNotificationsAsync() {
 
 
 export default function App() { 
-  
+
   useEffect(() => {
     registerForPushNotificationsAsync();
     

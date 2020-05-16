@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Platform, View, StyleSheet, Picker } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Platform, View, StyleSheet, Picker, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -31,8 +31,10 @@ const Request = (props) => {
     errorMessage: null,
     region: null,
     categoryTypes: categories,
-    selected: "Test"
+    selected: "Test",
   })
+  const mapRef = useRef(undefined);
+
 
   useEffect(() => {
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -59,12 +61,8 @@ const Request = (props) => {
         longitudeDelta: 0.00421*1.5
     }
     setState({ region })
+    mapRef.current.animateToRegion(region, 500);
   };
-
-//   const updateSelected = (selected) => {
-//       console.log(selected)
-//       setState({categoryTypes: selected})
-//   }
 
   const loadCatTypes = () => {
     return categories.map(cat_type => (
@@ -78,12 +76,23 @@ const Request = (props) => {
             style = {styles.map}
             provider = {MapView.PROVIDER_GOOGLE}
             region = {state.region != null ? state.region : defaultRegion}
-            showsUserLocation={true}
+            showsUserLocation={Platform.OS === "ios" ? true : false}
             showsMyLocationButton={true}
             followUserLocation={true}
             zoomEnabled={true}
+            ref={mapRef}
         >
         </MapView>
+        {Platform.OS != "ios" ?
+        <TouchableOpacity
+          style={styles.myLocationButton}
+          onPress={() => {
+            _getLocationAsync()
+          }}
+        >
+          <MaterialCommunityIcons name='crosshairs-gps' size={24} />
+        </TouchableOpacity>
+        : null}
         <Header
           style={styles.headerStyle}
             transparent
@@ -136,6 +145,18 @@ const styles = StyleSheet.create({
       shadowOpacity: 0,
       elevation: 0,
   },
+  myLocationButton: {
+    backgroundColor: "#fff",
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    padding: 15,
+    elevation: 3,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    borderRadius: 50
+  }
   });
 
 export default Request;

@@ -19,7 +19,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import { AntDesign } from '@expo/vector-icons'; 
 
-export default function DrawerContent(props, user, dispatch) {
+
+export default function DrawerContent(props, paperTheme) {
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -81,11 +82,11 @@ export default function DrawerContent(props, user, dispatch) {
           />
         </Drawer.Section>
         <Drawer.Section title="Preferences">
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={props.toggleTheme}>
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
-              <View pointerEvents="none">
-                <Switch value={false} />
+              <View >
+                <Switch value={paperTheme.dark} />
               </View>
             </View>
           </TouchableRipple>
