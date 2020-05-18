@@ -100,10 +100,10 @@ const Request = (props) => {
             transparent
           >
          <Left style={{ flex: 1 }}>
-                <Button  transparent onPress={() => props.navigation.openDrawer()}>
-                    <MaterialCommunityIcons name="menu" size={30} color="black" />
-                </Button>
-            </Left>
+            <Button style={styles.menuButton}  transparent onPress={() => props.navigation.openDrawer()}>
+                <MaterialCommunityIcons name="menu" size={30} color="black" />
+            </Button>
+          </Left>
          </Header>
         <View style={styles.categoryDropdown}>
             {/* fix */}
@@ -163,6 +163,17 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     justifyContent: 'center',
     borderRadius: 50
+  },
+  menuButton: {
+    backgroundColor: '#fff', 
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.30,
+    shadowRadius: 4.65,
+    elevation: 8
   }
   });
 

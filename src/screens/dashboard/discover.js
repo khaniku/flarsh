@@ -6,13 +6,19 @@ import {
   Animated,
   Image,
   Dimensions,
-  FlatList
+  FlatList,
+  Keyboard,
+  ActionSheetIOS
 } from "react-native";
 import {Rating} from 'react-native-elements';
 import MapView from "react-native-maps";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Container, Header, Content, Card, CardItem, Thumbnail, Title, Button, Icon, Left, Right, Body } from 'native-base';
+import Modal from "react-native-modal";
+import { CheckBox, SearchBar } from 'react-native-elements';
+import { Divider } from 'react-native-paper';
+import RNPickerSelect from 'react-native-picker-select';
 
 let regionTimeout = null;
 const Images = [
@@ -21,6 +27,9 @@ const Images = [
     { uri: "https://i.imgur.com/UDrH0wm.jpg" },
     { uri: "https://i.imgur.com/Ka8kNST.jpg" }
   ]
+
+const categoriesIOS = ['Cancel', 'Carpenter', 'Mechanic', "Test", "MakeUp Artist"]
+
 const testData = [
     {
       coordinate: {
@@ -74,7 +83,10 @@ const CARD_WIDTH = CARD_HEIGHT - 50;
 export default function Discover({ navigation }) {
     const [region, setRegion] = useState(defaultRegion);
     const [markers, setMarkers] = useState(testData);
+    const [filterModal, setFilterModal] = useState(false);
+    const [category, setCategory] = useState(null);
     const [stateIndex, setStateIndex] = useState(0);
+    const [search, setSearch] = useState(null);
     const [animation, setAnimation] = useState(new Animated.Value(0));
     const mapRef = useRef(null);
 
@@ -104,6 +116,35 @@ export default function Discover({ navigation }) {
             }, 0.5);
         });
       }, [])
+      
+    const openFilter = () => {
+      setFilterModal(true);
+    }
+
+    const searchFilterFunction = text => {
+         setSearch(text);
+    };
+
+    const resetSearch = () => {
+      setSearch('');
+    }
+
+    const openDrawer = () => {
+      navigation.openDrawer();
+      Keyboard.dismiss();
+    }
+
+    const onSelectCategory = () =>
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: categoriesIOS,
+        destructiveButtonIndex: 2,
+        cancelButtonIndex: 0
+      },
+      buttonIndex => {
+        setCategory(categoriesIOS[buttonIndex])
+      }
+    );
     
     const interpolations = markers.map((marker, index) => {
         const inputRange = [
@@ -126,13 +167,96 @@ export default function Discover({ navigation }) {
         return { scale, opacity};
     });
 
+    const renderModal = () => {
+      return (
+        <Modal
+          isVisible={filterModal}
+          style={{ backgroundColor: '#694fad', borderRadius: 10, marginHorizontal: 30, marginVertical: (height - 400) / 2 }}
+          deviceHeight={height}
+          backdropColor='transparent'
+          onBackdropPress={() => setFilterModal(false)}
+      >
+          <View style={{ marginTop: 22, height: 400, paddingVertical: 15, paddingHorizontal: 20 }}>
+            <View>
+              <Text style={{ color: '#fff', textAlign: 'center', fontSize: 18, }}>Filters</Text>
+              <Icon style={{ color: 'white', position: 'absolute', top: 0, right: 0 }} name='clear' type='MaterialIcons' onPress={() => setFilterModal(false)} />
+              <View style={{ marginBottom: 10 }}>
+                  <Text style={{ fontWeight: '700', marginBottom: 10, color: '#fff' }}>Categories</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <RNPickerSelect
+                      onValueChange={(value) => console.log(value)}
+                      style={{color: '#fff'}}
+                      items={[
+                          { label: 'Carpenter', value: 'football' },
+                          { label: 'MakeUp Artist', value: 'baseball' },
+                          { label: 'Mechanic', value: 'hockey' },
+                      ]}
+                  />
+                </View>
+              </View>
+              <Divider style={{height: 2, marginBottom: 10, backgroundColor: '#bdbdbd'}} />
+              <View style={{ marginBottom: 10 }}>
+                  <Text style={{ fontWeight: '700', marginBottom: 10, color: '#fff' }}>Ratings</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff' }}>High - Low</Text>
+                      <CheckBox
+                          containerStyle={{ borderWidth: 0, paddingLeft: 0, backgroundColor: 'transparent', marginLeft: 0, marginRight: 0, padding: 0 }}
+                          textStyle={{ fontWeight: 'normal', color: '#fff' }}
+                          iconRight={true}
+                          right
+                          checkedColor='#fff'
+                          uncheckedColor='#fff'
+                          //onPress={() => this.filterByDate(today, 'today')}
+                          //checked={this.state.todayChecked}
+                      />
+                  </View>
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff' }}>Low - High</Text>
+                      <CheckBox
+                          containerStyle={{ borderWidth: 0, paddingLeft: 0, backgroundColor: 'transparent', marginLeft: 0, marginRight: 0, padding: 0 }}
+                          textStyle={{ fontWeight: 'normal', color: '#fff' }}
+                          iconRight={true}
+                          right
+                          checkedColor='#fff'
+                          uncheckedColor='#fff'
+                          //onPress={() => this.filterByDate(tomorrow, 'tomorrow')}
+                          //checked={this.state.tomorrowChecked}
+                      />
+                  </View>
+              </View>
+              <Divider style={{height: 2, marginBottom: 10, backgroundColor: '#bdbdbd'}} />
+              <View style={{ marginBottom: 10 }}>
+                  <Text style={{ fontWeight: '700', marginBottom: 10, color: '#fff' }}>Distance</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff' }}>Nearby</Text>
+                      <CheckBox
+                          containerStyle={{ borderWidth: 0, paddingLeft: 0, backgroundColor: 'transparent', marginLeft: 0, marginRight: 0, padding: 0 }}
+                          textStyle={{ fontWeight: 'normal', color: '#fff' }}
+                          iconRight={true}
+                          right
+                          checkedColor='#fff'
+                          uncheckedColor='#fff'
+                          //onPress={() => this.filterByDate(today, 'today')}
+                          //checked={this.state.todayChecked}
+                      />
+                  </View>
+              </View>
+          </View>
+        </View>
+      </Modal>
+      )
+    }
+
     return (
-        <View style={styles.container}>   
+        <View style={styles.container}>
+          {renderModal()}
           <MapView
             ref={mapRef}
             initialRegion={region}
             //provider = {MapView.PROVIDER_GOOGLE}
             style={StyleSheet.absoluteFillObject}
+            onPress={Keyboard.dismiss}
           >
 
             {markers.map((marker, index) => {
@@ -162,11 +286,28 @@ export default function Discover({ navigation }) {
                 transparent
             >
           <Left style={{ flex: 1 }}>
-                  <Button  transparent onPress={() => navigation.openDrawer()}>
+                  <Button style={styles.menuButton} transparent onPress={() => openDrawer()}>
                       <MaterialCommunityIcons name="menu" size={30} color="black" />
                   </Button>
               </Left>
           </Header>
+          <View style={styles.searchFilter}>
+                <SearchBar
+                    placeholder='Search'
+                    round
+                    onChangeText={text => searchFilterFunction(text) }
+                    value={search}
+                    onClear={text => resetSearch()}
+                    containerStyle={{ backgroundColor: '#fff', width: width * 0.7, marginRight: 10, borderBottomWidth: 0, borderTopWidth: 0, padding: 0, borderColor: 'transparent' }}
+                    inputContainerStyle={{ backgroundColor: '#fff', borderWidth: 1, borderBottomWidth: 1, borderColor: '#939393', height: 40, borderRadius: 5,  borderColor: 'transparent' }}
+                    inputStyle={{ fontSize: 12 }}
+                    autoCorrect={false}
+                />
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ marginRight: 10 }}>Filter</Text>
+                    <Icon name='filter-list' type='MaterialIcons' style={{ color: '#694fad' }} onPress={() => openFilter()} />
+                </View>
+              </View>
           <Animated.ScrollView
             horizontal
             scrollEventThrottle={1}
@@ -235,6 +376,10 @@ const styles = StyleSheet.create({
       flex: 1,
       position: 'relative'
     },
+    result: {
+      fontSize: 64,
+      textAlign: "center"
+    },
     map: {
       flex: 1
     },
@@ -250,7 +395,7 @@ const styles = StyleSheet.create({
     },
     card: {
       padding: 10,
-      elevation: 2,
+      elevation: 5,
       backgroundColor: "#FFF",
       marginHorizontal: 10,
       shadowColor: "#000",
@@ -384,4 +529,35 @@ const styles = StyleSheet.create({
       shadowOpacity: 0,
       elevation: 0,
   },
+  searchFilter: {
+    flexDirection: 'row',
+    marginLeft: '2%', 
+    marginRight: '2%', 
+    borderRadius: 10, 
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, 
+    backgroundColor: '#fff', 
+    padding: 10, 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    marginBottom: 20, 
+    marginTop: 20
+  },
+  menuButton: {
+    backgroundColor: '#fff', 
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.30,
+    shadowRadius: 4.65,
+    elevation: 8
+  }
   });
