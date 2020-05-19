@@ -22,10 +22,10 @@ export default function Card(props) {
                 />
             </Appbar.Header>
           <Content style={{marginTop: 20}}>
-          <CreditCardInput onChange={(text) =>_onChange(text)} />
-          <View style={{alignItems: 'center'}}>
-            <AwesomeButton  textSize={20} stretch={true} style={{marginLeft: 20, marginRight: 20, width: 200, marginTop: 25 }} >Save</AwesomeButton>
-          </View>
+            <CreditCardInput onChange={(text) =>_onChange(text)} />
+            <View style={{alignItems: 'center'}}>
+              <AwesomeButton  textSize={20} stretch={true} style={{marginLeft: 20, marginRight: 20, width: 200, marginTop: 25 }} >Save</AwesomeButton>
+            </View>
           </Content>
         </Container>
     );

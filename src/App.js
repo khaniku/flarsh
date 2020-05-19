@@ -19,6 +19,7 @@ import reducers from "./reducers";
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { Asset } from 'expo-asset';
+import Signup from './screens/auth/signup'
 
 Asset;
 const Stack = createStackNavigator();

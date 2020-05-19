@@ -15,6 +15,7 @@ import * as Permissions from 'expo-permissions';
 import bookmark from './bookmark';
 import Profile from './profile';
 import Payment from './payment';
+import Preference from './preference';
 import {
     useTheme
   } from 'react-native-paper';
@@ -60,6 +61,10 @@ function mainStack() {
             headerShown: false
             }}
             component={Payment} />
+        <Stack.Screen name="preference" options={{
+            headerShown: false
+            }}
+            component={Preference} />
         </Stack.Navigator>
     )
 }
@@ -67,7 +72,7 @@ function mainStack() {
 function mainDrawer() {
     const paperTheme = useTheme();
   return (
-    <Drawer.Navigator drawerContent={props => DrawerContent(props, paperTheme)}>
+    <Drawer.Navigator drawerContent={props => DrawerContent(props)}>
         <Drawer.Screen name="Home" options={{
           headerStyle: {
             backgroundColor: 'transparent',
