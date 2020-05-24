@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, Text, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import LoginScreen from './screens/auth/login';
 import Discover from './screens/dashboard/discover';
 import Request from './screens/dashboard/request';
-import Map from './screens/dashboard';
-import Main from './screens/home';
+import HomeScreen from './screens/home';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { Root } from "native-base";
 import FlashMessage from "react-native-flash-message";
@@ -20,6 +19,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { Asset } from 'expo-asset';
 import Signup from './screens/auth/signup'
+import * as SecureStore from 'expo-secure-store';
 
 Asset;
 const Stack = createStackNavigator();
@@ -38,6 +38,11 @@ function AuthStack() {
         }}
         component={LoginScreen} 
       />
+      <Stack.Screen name="Signup" options={{
+        headerShown: false,
+        }}
+        component={Signup} 
+      />
     </Stack.Navigator>
   );
 }
@@ -55,15 +60,32 @@ function Home() {
                     ...TransitionPresets.ModalPresentationIOS,
                   }}
                   mode="modal"
-                component={Map} 
+                component={HomeScreen} 
             />
             <Stack.Screen name="Login" options={{
                 headerShown: false,
                 }}
-                component={LoginScreen} 
+                component={AuthStack} 
             />
     </Stack.Navigator>
     )
+}
+
+function Main () {
+  return (
+    <Stack.Navigator>
+        <Stack.Screen name="Login" options={{
+            headerShown: false,
+            }}
+            component={AuthStack} 
+        />
+        <Stack.Screen name="Home" options={{
+            headerShown: false,
+            }}
+            component={Home} 
+        />
+    </Stack.Navigator>
+  )
 }
 
 function renderLoading() {
@@ -91,6 +113,7 @@ let persistor = persistStore(store);
 
 export default function App() {
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const [token, setToken] = React.useState(null);
   const theme = isDarkTheme ? CombinedDarkTheme : CombinedDefaultTheme; // Use Light/Dark theme based on a state
   function toggleTheme() {
     console.log("here")
@@ -98,13 +121,24 @@ export default function App() {
     setIsDarkTheme(isDark => !isDark);
   }
 
+  useEffect(() => {
+    async function fetchToken() {
+      await SecureStore.getItemAsync('token').then(function(data) {
+        setToken(data);
+      })
+    }
+    fetchToken();
+  }, [token])
+
   return (
     <Provider store={store}>
       <PersistGate loading={renderLoading()} persistor={persistor}>
         <Root>
           <PaperProvider>
             <NavigationContainer>
-              <Main />
+              {token ? 
+                <Home />
+              : <Main/>}
               <FlashMessage position="top" /> 
             </NavigationContainer>
           </PaperProvider>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, View, Text, TouchableHighlight, TouchableWithoutFeedback, 
-    KeyboardAvoidingView, StyleSheet, SafeAreaView, Keyboard, TextInput } from 'react-native';
+    KeyboardAvoidingView, StyleSheet, SafeAreaView, Keyboard, TextInput, StatusBar, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input } from 'react-native-elements';
@@ -10,114 +10,167 @@ import { Appbar } from 'react-native-paper';
 import AwesomeButton from 'react-native-really-awesome-button';
 import { Content } from 'native-base';
 import { CreditCardInput } from "react-native-credit-card-input";
+import { signup, addCard } from "../../actions/api";
+import * as SecureStore from 'expo-secure-store';
 
-function NameScreen({ navigation }) {
-  return (
-    <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : null}
-            style={{ flex: 1 }}
-        >
-        <SafeAreaView style={styles.container}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.inner}>
-                    <Text style={styles.header}>
-                        What's your name?
-                    </Text>
-                    <View style={{flexDirection: 'row', width: '50%', top: 0}}>
-                        <Input
-                            placeholder='First Name'
-                            value={""}
-                            //onChangeText={text => setEmail({ text })}          
-                        />
-                        <Input
-                            placeholder='Last Name'
-                            value={""}
-                            //onChangeText={text => setEmail({ text })}          
-                        />
+function NameScreen({ route, navigation }) {
+    const { phoneNumber } = route.params;
+    const [firstName, setFirstName] = React.useState(null);
+    const [lastName, setLastName] = React.useState(null);
+    return (
+        <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                style={{ flex: 1 }}
+            >
+            <StatusBar barStyle="dark-content" />
+            <SafeAreaView style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.inner}>
+                        <Text style={styles.header}>
+                            What's your name?
+                        </Text>
+                        <View style={{flexDirection: 'row', width: '50%', top: 0}}>
+                            <Input
+                                placeholder='First Name'
+                                value={firstName}
+                                onChangeText={text => setFirstName(text)}          
+                            />
+                            <Input
+                                placeholder='Last Name'
+                                value={lastName}
+                                onChangeText={text => setLastName(text)}          
+                            />
+                        </View>
+                        <View style={{ flex : 1 }} />
                     </View>
-                    <View style={{ flex : 1 }} />
+                </TouchableWithoutFeedback>
+                <View style={{ position: 'absolute', right: 8, bottom: 0 }}>
+                    <TouchableHighlight>
+                        <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Email', 
+                        {
+                            phoneNumber: phoneNumber,
+                            firstName: firstName,
+                            lastName: lastName,
+                        })} >
+                        </FontAwesome.Button>
+                    </TouchableHighlight>
                 </View>
-            </TouchableWithoutFeedback>
-            <View style={{ position: 'absolute', right: 8, bottom: 0 }}>
-                <TouchableHighlight>
-                    <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Email')} >
-                    </FontAwesome.Button>
-                </TouchableHighlight>
-            </View>
-        </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+            </SafeAreaView>
+        </KeyboardAvoidingView>
+    );
 }
 
-function EmailScreen({ navigation }) {
-  return (
-    <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : null}
-            style={{ flex: 1 }}
-        >
-        <Appbar.Header style={{backgroundColor: '#694fad'}}>
-            <Appbar.BackAction
-            onPress={() => navigation.goBack()}
-            />
-            <Appbar.Content
-            title="Add Email"
-            />
-        </Appbar.Header>
-        <SafeAreaView style={styles.container}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.inner}>
-                    <Text style={styles.header}>
-                        What's your Email?
-                    </Text>
-                        <Input
-                            placeholder='Email'
-                            value={""}
-                            //onChangeText={text => setEmail({ text })}          
-                        />                   
-                    <View style={{ flex : 1 }} />
+function EmailScreen({ route, navigation }) {
+    const { firstName } = route.params;
+    const { lastName } = route.params;
+    const { phoneNumber } = route.params;
+    const [email, setEmail] = React.useState(null);
+    return (
+        <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                style={{ flex: 1 }}
+            >
+            <Appbar.Header style={{backgroundColor: '#694fad'}}>
+                <Appbar.BackAction
+                onPress={() => navigation.goBack()}
+                />
+                <Appbar.Content
+                title="Add Email"
+                />
+            </Appbar.Header>
+            <StatusBar barStyle="dark-content" />
+            <SafeAreaView style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.inner}>
+                        <Text style={styles.header}>
+                            What's your Email?
+                        </Text>
+                            <Input
+                                placeholder='Email'
+                                value={email}
+                                onChangeText={text => setEmail(text)}          
+                            />                   
+                        <View style={{ flex : 1 }} />
+                    </View>
+                </TouchableWithoutFeedback>
+                <View style={{ position: 'absolute', right: 8, bottom: 0 }}>
+                    <TouchableHighlight>
+                        <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Card', {
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            phoneNumber: phoneNumber
+                        })} >
+                        </FontAwesome.Button>
+                    </TouchableHighlight>
                 </View>
-            </TouchableWithoutFeedback>
-            <View style={{ position: 'absolute', right: 8, bottom: 0 }}>
-                <TouchableHighlight>
-                    <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Card')} >
-                    </FontAwesome.Button>
-                </TouchableHighlight>
-            </View>
-        </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+            </SafeAreaView>
+        </KeyboardAvoidingView>
+    );
 }
 
-function CardScreen({ navigation }) {
-  return (
-    <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : null}
-            style={{ flex: 1 }}
-        >
-        <Appbar.Header style={{backgroundColor: '#694fad'}}>
-            <Appbar.BackAction
-            onPress={() => navigation.goBack()}
-            />
-            <Appbar.Content
-            title="Add Card"
-            />
-        </Appbar.Header>
-        <SafeAreaView style={styles.container}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.inner}>
-                    <CreditCardInput onChange={(text) =>_onChange(text)} />    
-                    <View style={{ flex : 1 }} />
+function CardScreen({ route, navigation }) {
+    const { firstName } = route.params;
+    const { lastName } = route.params;
+    const { email } = route.params;
+    const { phoneNumber } = route.params;
+    const user = {firstName, lastName, email, phoneNumber};
+    const [card, setCard] = React.useState(null);
+
+    const _onChange = (form) => {
+        if(form.valid)
+            setCard(form);
+    }
+
+    const addUser = async () => {
+        if(card){
+            if(card.valid){
+                let token = null;
+                await signup(user).then(function (responseJson) {
+                    SecureStore.setItemAsync('token', responseJson.token);
+                })
+                await SecureStore.getItemAsync('token').then(function(data) {
+                    token = data;
+                })
+                await addCard(card.values, token).then(function (responseJson) {
+                    navigation.navigate('Home')
+                })
+            }
+        } else{
+            Alert.alert("Please enter a valid card number")
+        }
+    }
+
+    return (
+        <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                style={{ flex: 1 }}
+            >
+            <Appbar.Header style={{backgroundColor: '#694fad'}}>
+                <Appbar.BackAction
+                onPress={() => navigation.goBack()}
+                />
+                <Appbar.Content
+                title="Add Card"
+                />
+            </Appbar.Header>
+            <StatusBar barStyle="dark-content" />
+            <SafeAreaView style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.inner}>
+                        <CreditCardInput onChange={(form) =>_onChange(form)} />    
+                        <View style={{ flex : 1 }} />
+                    </View>
+                </TouchableWithoutFeedback>
+                <View style={{ position: 'absolute', right: 8, bottom: 0}}>
+                    <TouchableHighlight>
+                        <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => addUser()} >
+                        </FontAwesome.Button>
+                    </TouchableHighlight>
                 </View>
-            </TouchableWithoutFeedback>
-            <View style={{ position: 'absolute', right: 8, bottom: 0}}>
-                <TouchableHighlight>
-                    <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Card')} >
-                    </FontAwesome.Button>
-                </TouchableHighlight>
-            </View>
-        </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+            </SafeAreaView>
+        </KeyboardAvoidingView>
+    );
 }
 
 function SettingsScreen({ navigation }) {
