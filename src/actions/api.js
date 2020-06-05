@@ -43,7 +43,7 @@ export function signup(user){
         return responseJson;
     })
     .catch((error) => {
-        console.log(error);
+        console.log("error");
     });
 }
 
