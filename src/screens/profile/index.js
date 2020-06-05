@@ -16,17 +16,19 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { Appbar } from 'react-native-paper';
+import { useSelector } from "react-redux";
 
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
 export default function Profile(props) {
-  const [firstName, setFirstName] = useState("Emeka");
-  const [lastName, setLastName] = useState("Kanikwu");
-  const [email, setEmail] = useState("emeka@gmail.com");
+  const user = useSelector(state => state.user.userDetails);
+  const [firstName, setFirstName] = useState(user.firstname);
+  const [lastName, setLastName] = useState(user.lastname);
+  const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("password");
-  const [number, setNumber] = useState("+1 555 555 5553");
+  const [number, setNumber] = useState('+'+user.phoneNumber.toString());
   const [profilePhoto, setProfilePhoto] = useState(null); 
 
   useEffect( () => {
@@ -111,9 +113,6 @@ export default function Profile(props) {
                   <Text bold size={28} color="#32325D">
                     {firstName} {lastName}
                   </Text>
-                  <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                    San Francisco, USA
-                  </Text>
                 </Block>
                 <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
                   <Block style={styles.divider} />
@@ -128,17 +127,6 @@ export default function Profile(props) {
                     }
                   />
                 </Block>   
-                <Block left>
-                <Input
-                    placeholder='Password'
-                    value={password}
-                    onChangeText={text => setPassword({ text })}
-                    secureTextEntry={true}
-                    leftIcon={
-                      <MaterialIcons name="lock" size={24} color="black" />
-                    }
-                  />
-                </Block>
                 <Block left>
                   <Input
                       placeholder='Phone Number'

@@ -10,8 +10,10 @@ import moment from 'moment';
 import { useSelector } from "react-redux";
 import { showMessage } from "react-native-flash-message";
 
-export default function Card(props) {
-  const [card, setCard] = React.useState(null);
+export default function OneCard({navigation, route}) {
+  const { id } = route.params;
+  const cardDetails = useSelector(state => state.card.filter(x => x.id == id));
+  const [card, setCard] = React.useState(cardDetails[0].card_number);
   const token = useSelector(state => state.user.token);
   const [valid, setValid] = React.useState(false);
 
@@ -25,6 +27,7 @@ export default function Card(props) {
         setValid(true)
       }
   }
+  const _onFocus = (field) => console.log("focusing", field);
 
   const save = async () => {
     if(valid) {
@@ -47,14 +50,17 @@ export default function Card(props) {
           <StatusBar barStyle="light-content" />
             <Appbar.Header style={{backgroundColor: '#fff'}}>
                 <Appbar.BackAction 
-                onPress={() => props.navigation.goBack()}
+                onPress={() => navigation.goBack()}
                 />
                 <Appbar.Content
-                title="Add Card"
+                title="Card"
                 />
             </Appbar.Header>
           <Content style={{marginTop: 20}}>
-            <CreditCardInput onChange={(text) =>_onChange(text)} />
+            <LiteCreditCardInput 
+            autoFocus
+            onFocus={_onFocus}
+            onChange={(text) =>_onChange(text)} />
             <View style={{alignItems: 'center'}}>
               <AwesomeButton onPress={() => save()}  textSize={20} stretch={true} style={{marginLeft: 20, marginRight: 20, width: 200, marginTop: 25 }} >Save</AwesomeButton>
             </View>

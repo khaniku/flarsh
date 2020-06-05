@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import { StyleSheet, Text, View, AsyncStorage, ActivityIndicator } from 'react-native';
 import LoginScreen from './screens/auth/login';
-import Discover from './screens/dashboard/discover';
-import Request from './screens/dashboard/request';
 import HomeScreen from './screens/home';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { Root } from "native-base";

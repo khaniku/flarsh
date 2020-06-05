@@ -10,11 +10,16 @@ import { Appbar } from 'react-native-paper';
 import AwesomeButton from 'react-native-really-awesome-button';
 import { Content } from 'native-base';
 import { CreditCardInput } from "react-native-credit-card-input";
-import { signup, addCard } from "../../actions/api";
+import { signup, addCard, checkEmail } from "../../actions/api";
 import * as SecureStore from 'expo-secure-store';
+import { useDispatch } from "react-redux";
+import {User} from '../../actions';
+import moment from 'moment';
+import { showMessage } from "react-native-flash-message";
 
 function NameScreen({ route, navigation }) {
     const { phoneNumber } = route.params;
+    const { userResp } = route.params;
     const [firstName, setFirstName] = React.useState(null);
     const [lastName, setLastName] = React.useState(null);
     return (
@@ -51,6 +56,7 @@ function NameScreen({ route, navigation }) {
                             phoneNumber: phoneNumber,
                             firstName: firstName,
                             lastName: lastName,
+                           userResp: userResp
                         })} >
                         </FontAwesome.Button>
                     </TouchableHighlight>
@@ -64,7 +70,30 @@ function EmailScreen({ route, navigation }) {
     const { firstName } = route.params;
     const { lastName } = route.params;
     const { phoneNumber } = route.params;
+    const { userResp } = route.params;
     const [email, setEmail] = React.useState(null);
+    const [valid, setValid] = React.useState(false);
+
+    const validateEmail = async () => {
+        await checkEmail(email).then(function (data) {
+            if(!data){
+                navigation.navigate('Card', {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    userResp: userResp
+                })
+            } else {
+                setValid(false)
+                showMessage({
+                    message: "Email already exists",
+                    type: "danger",
+                });
+            }
+        })
+    }
+
     return (
         <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : null}
@@ -95,12 +124,7 @@ function EmailScreen({ route, navigation }) {
                 </TouchableWithoutFeedback>
                 <View style={{ position: 'absolute', right: 8, bottom: 0 }}>
                     <TouchableHighlight>
-                        <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={() => navigation.navigate('Card', {
-                            firstName: firstName,
-                            lastName: lastName,
-                            email: email,
-                            phoneNumber: phoneNumber
-                        })} >
+                        <FontAwesome.Button name="arrow-circle-right" size={60} color="black" backgroundColor='#fff' onPress={validateEmail} >
                         </FontAwesome.Button>
                     </TouchableHighlight>
                 </View>
@@ -114,25 +138,36 @@ function CardScreen({ route, navigation }) {
     const { lastName } = route.params;
     const { email } = route.params;
     const { phoneNumber } = route.params;
-    const user = {firstName, lastName, email, phoneNumber};
+    const { userResp } = route.params;
+    const userType = {"customer": true, "service_provider": false};
+    const user = {firstName, lastName, email, phoneNumber, userResp, userType};
     const [card, setCard] = React.useState(null);
+    const [valid, setValid] = React.useState(false);
+    const dispatch = useDispatch();
 
     const _onChange = (form) => {
-        if(form.valid)
-            setCard(form);
+        if(form.valid) {
+            let date = moment(form.values.expiry,"MM/YY").format("YYYY-MM-DD");
+            let number = form.values.number.replace(/\s+/g,'');
+            let cvc = form.values.cvc.replace(/\s+/g,'');
+            const newForm = Object.assign({}, form.values, { expiry: date, number: parseInt(number), cvc:  parseInt(cvc) });
+            setCard(newForm);
+            setValid(true);
+        }
     }
 
     const addUser = async () => {
         if(card){
-            if(card.valid){
+            if(valid){
                 let token = null;
                 await signup(user).then(function (responseJson) {
                     SecureStore.setItemAsync('token', responseJson.token);
+                    dispatch(User(responseJson)) 
                 })
                 await SecureStore.getItemAsync('token').then(function(data) {
                     token = data;
                 })
-                await addCard(card.values, token).then(function (responseJson) {
+                await addCard(card, token).then(function (responseJson) {
                     navigation.navigate('Home')
                 })
             }

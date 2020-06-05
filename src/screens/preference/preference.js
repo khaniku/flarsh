@@ -3,12 +3,20 @@ import { StyleSheet, View, FlatList, Platform, TouchableOpacity, ScrollView } fr
 import { Block, Text, theme, Icon } from "galio-framework";
 import { Appbar } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
+import { useDispatch, useSelector } from "react-redux";
+import { User } from '../../actions';
+import { logout } from '../../actions/api';
 
 export default function preference(props) {
+    const dispatch = useDispatch();
+    const refreshToken = useSelector(state => state.user.refreshToken);
+
     const logOut = () => {
       SecureStore.deleteItemAsync('token');
       props.navigation.goBack();
       props.navigation.navigate('Login')
+      logout(refreshToken);
+      //dispatch(User(null)) 
     }
     const renderItem = ({ item }) => {
         const {navigate} = props.navigation;
