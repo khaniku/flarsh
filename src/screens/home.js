@@ -10,6 +10,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import Map from './dashboard';
 import DrawerContent from '../components/sidebar'
 import LoginScreen from "./auth/login";
+import Signup from "./auth/signup";
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import bookmark from './bookmark';
@@ -36,6 +37,11 @@ function Login() {
           headerShown: false
         }}
         component={LoginScreen} />
+      <Stack.Screen name="Signup" options={{
+        headerShown: false,
+        }}
+        component={Signup} 
+      />
     </Stack.Navigator>
   );
 }
