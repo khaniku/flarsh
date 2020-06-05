@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef} from 'react';
-import { View,Button, Text, Alert, StyleSheet, ImageBackground, Keyboard, TextInput, 
+import { View,Button, Text, Alert, StyleSheet, ImageBackground, Keyboard, TextInput, StatusBar,
     Image,KeyboardAvoidingView, TouchableWithoutFeedback, TouchableOpacity, TouchableHighlight, ActivityIndicator} from 'react-native';
 import CodeInput from 'react-native-confirmation-code-input';
 import MyView from './myView';
@@ -12,6 +12,11 @@ import CountDown from 'react-native-countdown-component';
 import CountryPicker from 'react-native-country-picker-modal';
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { Container, Header, Left, Body, Right, Button as NativeButton, Icon, Title } from 'native-base';
+import { login, checkPhoneNumber } from "../../actions/api";
+import * as SecureStore from 'expo-secure-store';
+import { Appbar } from 'react-native-paper';
+import { useDispatch } from "react-redux";
+import {User} from '../../actions';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
@@ -22,15 +27,16 @@ const firebaseConfig = {
     messagingSenderId: "612687824348",
     appId: "1:612687824348:web:7e488a8e68f89b8a5b3b19",
     measurementId: "G-RB552SW8GS"
-  };
+};
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
 }
 const successImageUri = 'https://cdn.pixabay.com/photo/2015/06/09/16/12/icon-803718_1280.png';
+const status = "production"; //change status to production for non testing
+const client = "customer";
 
-
-export default function LoginScreen() {
+export default function LoginScreen(props) {
     const [user, setUser] = useState(null);
     const [confirmResult, setConfirmResult] = useState(null);
     const [message, setMessage] = useState('');
@@ -50,6 +56,7 @@ export default function LoginScreen() {
     const [showNoCode, setShowNoCode] = useState(false);
     const [showTimer, setShowTimer] = useState(true);
     const [showLoading, setShowLoading] = useState(false)
+    const dispatch = useDispatch();
 
     DelayedButton = (props) =>{
         setTimeout(() => {
@@ -132,13 +139,10 @@ export default function LoginScreen() {
 
     resendCode = async () => {
         setShowLoading(true)
-        const countryCode = '+'.concat("" , country != null ? country.callingCode : 1);
-        const numberConcat = countryCode.concat("" , phoneNumber);
-        const number = parsePhoneNumberFromString(numberConcat);
         try {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
             const verificationId = await phoneProvider.verifyPhoneNumber(
-                numberConcat,
+                phoneNumber,
                 recaptchaVerifier.current
             );
             setVerificationId(verificationId);
@@ -152,26 +156,32 @@ export default function LoginScreen() {
     signIn = async () => {
         const countryCode = '+'.concat("" , country != null ? country.callingCode : 1);
         const numberConcat = countryCode.concat("" , phoneNumber);
+        setPhoneNumber(numberConcat);
         const number = parsePhoneNumberFromString(numberConcat);
         
         if (phoneNumber == null || phoneNumber == undefined){
           Alert.alert("Please enter the text to proceed");
         }else{
             if(number.isValid()){
-                //setLoading(true);
+                // setLoading(true);
                 setIsHidden(!isHidden)
-                try {
-                    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-                    const verificationId = await phoneProvider.verifyPhoneNumber(
-                        numberConcat,
-                        recaptchaVerifier.current
-                    );
-                    setVerificationId(verificationId);
-                    Alert.alert("Verification code has been sent to your phone.")
-                } catch (err) {
-                    //showMessage({ text: `Error: ${err.message}`, color: "red" });
-                    console.log("here: "+err.message)
-                }
+                if(status == "production") {
+                    try {
+                        const phoneProvider = new firebase.auth.PhoneAuthProvider();
+                        const verificationId = await phoneProvider.verifyPhoneNumber(
+                                numberConcat,
+                                recaptchaVerifier.current
+                            );
+                        setVerificationId(verificationId);
+                        //setLoading(false);
+                        Alert.alert("Verification code has been sent to your phone.")
+                    } catch (err) {
+                        //showMessage({ text: `Error: ${err.message}`, color: "red" });
+                        console.log("here: "+err.message)
+                    }
+                }else{
+                    setVerificationId(12345); 
+                } 
             }else {
                 Alert.alert("Number is not valid");
             }
@@ -199,13 +209,71 @@ export default function LoginScreen() {
     _onFulfill = async (codeInput) => {
         setVerificationCode(codeInput)
         try {
-            const credential = firebase.auth.PhoneAuthProvider.credential(
-              verificationId,
-              codeInput
-            );
-            await firebase.auth().signInWithCredential(credential);
+            setLoading(true)
+           //if(status == "production"){
+                const credential = firebase.auth.PhoneAuthProvider.credential(
+                verificationId,
+                codeInput
+                );
+                const user = await firebase.auth().signInWithCredential(credential);
+                user;
+            //}
             console.log("Phone authentication successful");
+            let number = null;
+            // const user = {user: {
+            //     "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
+            //     "appName": "[DEFAULT]",
+            //     "authDomain": "flarsh-c5380.firebaseapp.com",
+            //     "createdAt": "1590208476430",
+            //     "displayName": null,
+            //     "email": null,
+            //     "emailVerified": false,
+            //     "isAnonymous": false,
+            //     "lastLoginAt": "1590477366429",
+            //     "phoneNumber": "+19366689685",
+            //     "photoURL": null,
+            //     "providerData":  [
+            //        {
+            //         "displayName": null,
+            //         "email": null,
+            //         "phoneNumber": "+19366689685",
+            //         "photoURL": null,
+            //         "providerId": "phone",
+            //         "uid": "+19366689685",
+            //       },
+            //     ],
+            //     "redirectEventId": null,
+            //     "stsTokenManager":  {
+            //       "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMmM1NDk4YTcwYjc0MjQ5NzI2ZDhmYjYxODlkZWI3NGMzNWM4MGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmxhcnNoLWM1MzgwIiwiYXVkIjoiZmxhcnNoLWM1MzgwIiwiYXV0aF90aW1lIjoxNTkwNTU3ODE1LCJ1c2VyX2lkIjoiSFRpQ3p5djJ1eGF3RU5iMGpBSmhaN21LZnMxMyIsInN1YiI6IkhUaUN6eXYydXhhd0VOYjBqQUpoWjdtS2ZzMTMiLCJpYXQiOjE1OTA1NTk4MjMsImV4cCI6MTU5MDU2MzQyMywicGhvbmVfbnVtYmVyIjoiKzE5MzY2Njg5Njg1IiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJwaG9uZSI6WyIrMTkzNjY2ODk2ODUiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwaG9uZSJ9fQ.RV-_kdq1-JweW7tZAOES3sltS280ybI6Jo_pyBG83US7-bcJpHb1HTBGG2HyAO9p2yaiaOfYmk0GdYZU0F5sCnYcHrIbr4joBwuQWGPSVAHD4H-R0X4-zMk8rGOWzk300Nki-ki71yfQ8FZS7b5iuff_jvosg8KtqeSyr_iGCkZqFkIWHM05US1OA98pk02hQqS-tzF28ZLTZUiewhQKEriCHhJwiBz0Dtb1wi63sLahvFbIQ_IBh9_hYUK9FvKGLZik-nzP5GsUfXEIpBwOU1BS_4ebDNuSPh4vizS-xMFMistFsOtHWjuEKRWrALxOGpIQhSQSnawM0LvEfOHdhQ",
+            //       "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
+            //       "expirationTime": 1590561415300,
+            //       "refreshToken": "AE0u-NflgfnG_rLlRM8-coZSiXDTj2ynuQlk6gnknco7c91twMUY_0JbB7GOTstZydPrOHpFsBF8CZchKiwOtB7DflNs45_pT3G25aLnBhYArnwr4yy6LxMRzaCNkiHt3ut0scbgQg6nzbWrGTP1_xa3N_Ib7YaJT58gWxyHj8p30Kv9bAEbIYKqFxsdmecbnc65NGJOVd5c",
+            //     },
+            //     "tenantId": null,
+            //     "uid": "HTiCzyv2uxawENb0jAJhZ7mKfs13",
+            //   }}
+              
+            await checkPhoneNumber(phoneNumber).then(function (responseJson) {
+                number = responseJson
+            })
+            if(number) {
+                await login(user.user, client).then(function (responseJson) {
+                    SecureStore.setItemAsync('token', responseJson.token);
+                    dispatch(User(responseJson)) 
+                })
+                props.navigation.navigate('Home')
+                setLoading(false)
+            }else{
+                setLoading(false)
+                props.navigation.navigate('Signup',{
+                    screen: 'Name',
+                    params: { phoneNumber: phoneNumber, userResp: user.user },
+                });
+            }
+                
           } catch (err) {
+            setLoading(false)
+            Alert.alert("Code not valid!")
             console.log(err.message)
           }
     }
@@ -217,6 +285,7 @@ export default function LoginScreen() {
                     ref={recaptchaVerifier}
                     firebaseConfig={firebaseConfig}
                 />
+                <StatusBar barStyle="dark-content" />
                 <TouchableWithoutFeedback style={styles.container} onPress={()=>{Keyboard.dismiss() }} >
                     <View style={styles.container}>
                         <ImageBackground source = {require('../../../assets/login.png')} style = {{flex: 1}}>
@@ -305,16 +374,25 @@ export default function LoginScreen() {
        renderVerificationCodeInput = () => {   
          return (
             <Container>
-                <Header style={styles.inputWrapper}>
+                {/* <Header style={styles.inputWrapper}>
                     <Left>
                         <NativeButton onPress={() => setVerificationId(false)} transparent>
                             <Icon name='md-arrow-back' style={styles.iconStyle}/>
                         </NativeButton>
                     </Left>
-                 </Header>
+                 </Header> */}
+                <Appbar.Header style={{backgroundColor: '#2a3f54'}}>
+                    <Appbar.BackAction
+                        onPress={() => setVerificationId(false)}
+                    />
+                    <Appbar.Content
+                        title="Verify Code"
+                    />
+                </Appbar.Header>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>        
                     <TouchableWithoutFeedback style={styles.container} onPress={()=>{Keyboard.dismiss()}} >
                         <View style={styles.container}>
+                            <Loader loading={loading} />
                             <View style={styles.inputWrapper1}>
                                 <Text style={styles.inputLabel1}>Enter Verification Code</Text>
                                 <CodeInput
@@ -438,6 +516,7 @@ codeStyles: {
 },
 iconStyle: {
     fontSize: 30,
-    color: "#fff"
+    color: "#fff",
+    marginTop: 5
 }   
 });

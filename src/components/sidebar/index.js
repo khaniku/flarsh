@@ -19,8 +19,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import { AntDesign } from '@expo/vector-icons'; 
 
-
-export default function DrawerContent(props) {
+export default function DrawerContent(props, user) {
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -32,11 +31,11 @@ export default function DrawerContent(props) {
           <Avatar.Image
             source={{
               uri:
-                'https://ui-avatars.com/api/?name=Emeka Kanikwu?rounded=true',
+                'https://ui-avatars.com/api/?name='+user.firstname+' '+user.lastname+'?rounded=true',
             }}
             size={50}
           />
-          <Title style={styles.title}>Emeka Kanikwu</Title>
+          <Title style={styles.title}>{user.firstname} {user.lastname}</Title>
           {/* <Caption style={styles.caption}>@trensik</Caption> */}
         </View>
         <Drawer.Section style={styles.drawerSection}>
@@ -95,13 +94,6 @@ export default function DrawerContent(props) {
     </DrawerContentScrollView>
   );
 }
-async function logOut(props, dispatch) {
-    props.navigation.replace('Login')
-    SecureStore.deleteItemAsync('access_token')
-    //dispatch(User(null))
-    dispatch(Auth(null)) 
-  }
-
 
 const styles = StyleSheet.create({
   drawerContent: {

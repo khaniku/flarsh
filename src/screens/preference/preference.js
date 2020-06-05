@@ -2,14 +2,27 @@ import React, {useState} from 'react';
 import { StyleSheet, View, FlatList, Platform, TouchableOpacity, ScrollView } from "react-native";
 import { Block, Text, theme, Icon } from "galio-framework";
 import { Appbar } from 'react-native-paper';
+import * as SecureStore from 'expo-secure-store';
+import { useDispatch, useSelector } from "react-redux";
+import { User } from '../../actions';
+import { logout } from '../../actions/api';
 
 export default function preference(props) {
+    const dispatch = useDispatch();
+    const refreshToken = useSelector(state => state.user.refreshToken);
 
+    const logOut = () => {
+      SecureStore.deleteItemAsync('token');
+      props.navigation.goBack();
+      props.navigation.navigate('Login')
+      logout(refreshToken);
+      //dispatch(User(null)) 
+    }
     const renderItem = ({ item }) => {
         const {navigate} = props.navigation;
         return (
             <Block style={styles.rows}>
-              <TouchableOpacity onPress={() => navigate(item.id)}>
+              <TouchableOpacity onPress={() => item.type == 'button' ? navigate(item.id) : logOut()}>
                 <Block row middle space="between" style={{paddingTop:7}}>
                   <Text size={14}>{item.title}</Text>
                   <Icon name="angle-right" family="font-awesome" style={{ paddingRight: 5 }} />
@@ -23,6 +36,7 @@ export default function preference(props) {
         { title: "User Agreement", id: "Agreement", type: "button" },
         { title: "Privacy", id: "Privacy", type: "button" },
         { title: "About", id: "About", type: "button" },
+        { title: "Log out", id: "LogOut", type: "logout" },
       ];
 
     return (

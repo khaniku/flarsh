@@ -19,6 +19,11 @@ import Preference from './preference';
 import {
     useTheme
   } from 'react-native-paper';
+import { useSelector, useDispatch } from "react-redux";
+import { validateRefreshToken, getNewToken } from "../actions/api";
+import { newToken } from "../actions";
+import Moment from 'moment';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -70,9 +75,10 @@ function mainStack() {
 }
 
 function mainDrawer() {
-    const paperTheme = useTheme();
+  const paperTheme = useTheme();
+  const user = useSelector(state => state.user.userDetails);
   return (
-    <Drawer.Navigator drawerContent={props => DrawerContent(props)}>
+    <Drawer.Navigator drawerContent={props => DrawerContent(props, user)}>
         <Drawer.Screen name="Home" options={{
           headerStyle: {
             backgroundColor: 'transparent',
@@ -100,15 +106,33 @@ async function registerForPushNotificationsAsync() {
   let token = await Notifications.getExpoPushTokenAsync();
 }
 
+export default function App({navigation}) { 
+  const refreshToken = useSelector(state => state.user.refreshToken);
+  const time = useSelector(state => state.user)
+  const expirationTime = useSelector(state => state.user.expirationTime);
+  const apiKey = useSelector(state => state.user.apiKey);
+  const dispatch = useDispatch();
 
-
-export default function App() { 
+  const updateToken =  () => {
+    validateRefreshToken(refreshToken).then(function (data) {
+      if(data){
+        dispatch(newToken(refreshToken, apiKey))
+      }
+    })     
+  }
 
   useEffect(() => {
     registerForPushNotificationsAsync();
+    if(Moment().isAfter(expirationTime))
+      updateToken();
     
-  }, [])
+      const unsubscribe = navigation.addListener('focus', () => {
+        console.log("test")
+      });
   
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return unsubscribe;
+  }, [navigation])
   
   return (
     <Stack.Navigator>
