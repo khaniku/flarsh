@@ -9,7 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-package-lock.json
 .eslintrc.json
 
 # macOS
