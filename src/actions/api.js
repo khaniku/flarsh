@@ -1,5 +1,6 @@
-const url = "http://localhost:3000"
 import axios from 'axios';
+
+const url = "http://localhost:3000"
 
 export function login(user, client){
     return fetch(url+"/auth/login", {
