@@ -58,6 +58,7 @@ export const signup = ( user ) => {
             userType: user.userType
           })
           .then(res => {
+          console.log(res)
             return res.data;
           })
           .catch(err => {
