@@ -8,7 +8,6 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@": "react-navigation/drawer",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "^5.4.2",
     "@react-navigation/drawer": "^5.7.2",
@@ -24,6 +23,7 @@
     "expo-secure-store": "~8.1.0",
     "firebase": "7.9.0",
     "galio-framework": "^0.6.3",
+    "geolib": "^3.3.1",
     "libphonenumber-js": "^1.7.50",
     "moment": "^2.26.0",
     "native-base": "2.13.8",

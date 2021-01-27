@@ -14,6 +14,7 @@ import Signup from "./auth/signup";
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import bookmark from './bookmark';
+import business from './business';
 import Profile from './profile';
 import Payment from './payment';
 import Preference from './preference';
@@ -64,6 +65,10 @@ function mainStack() {
             headerShown: false,
             }}
             component={bookmark} />
+        <Stack.Screen name="business" options={{
+            headerShown: false,
+            }}
+            component={business} />
         <Stack.Screen name="profile" options={{
             headerShown: false
             }}

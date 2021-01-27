@@ -8,7 +8,8 @@ import {
   Dimensions,
   FlatList,
   Keyboard,
-  ActionSheetIOS
+  ActionSheetIOS,
+  KeyboardAvoidingView
 } from "react-native";
 import {Rating} from 'react-native-elements';
 import MapView from "react-native-maps";
@@ -19,6 +20,10 @@ import Modal from "react-native-modal";
 import { CheckBox, SearchBar } from 'react-native-elements';
 import { Divider } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
+import {allBusinesses} from "../../actions/api";
+import {allCategory} from "../../actions/api";
+import * as Location from 'expo-location';
+import { getDistance, getPreciseDistance } from 'geolib';
 
 let regionTimeout = null;
 const Images = [
@@ -82,15 +87,46 @@ const CARD_WIDTH = CARD_HEIGHT - 50;
 
 export default function Discover({ navigation }) {
     const [region, setRegion] = useState(defaultRegion);
-    const [markers, setMarkers] = useState(testData);
+    const [markers, setMarkers] = useState([]);
+    const [holdMarkers, setHoldMarkers] = useState([]);
     const [filterModal, setFilterModal] = useState(false);
     const [category, setCategory] = useState(null);
+    const [catLabel, setCatLabel] = useState([]);
     const [stateIndex, setStateIndex] = useState(0);
     const [search, setSearch] = useState(null);
     const [animation, setAnimation] = useState(new Animated.Value(0));
+    const [trueData, setTrueData] = useState([])
+    const [highLow, setHighLow] = useState(false) //rating state for high to low
+    const [lowHigh, setLowHigh] = useState(false) //rating state for low to high
+    const [nearby, setNearby] = useState(false) 
+    const [location, setLocation] = useState(null) 
     const mapRef = useRef(null);
 
+    
+    let hold_state = holdMarkers
     useEffect( () => {
+
+        (async () => {
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location)
+          console.log(location)
+        })();
+
+        allBusinesses().then(function (data) { 
+          setMarkers(data)
+          setHoldMarkers(data)
+        })
+        allCategory().then(function (data) { 
+          let arr = []
+          data.map(val => {
+            let obj = {}
+            obj["label"] = val.name
+            obj["value"] = val._id
+            arr.push(obj)
+
+          })
+          setCatLabel(arr)
+        })
         animation.addListener(({ value }) => {
             let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
             if (index >= markers.length) {
@@ -122,7 +158,12 @@ export default function Discover({ navigation }) {
     }
 
     const searchFilterFunction = text => {
-         setSearch(text);
+        setSearch(text);
+        let newArr = hold_state.filter(val => {
+          return val.title.toLowerCase().includes(text.toLowerCase())
+        })
+        setMarkers(newArr)
+         
     };
 
     const resetSearch = () => {
@@ -167,6 +208,99 @@ export default function Discover({ navigation }) {
         return { scale, opacity};
     });
 
+    let rating_high_low = () => {
+      let hold_state = holdMarkers
+      if (!lowHigh && !highLow){
+        setHighLow(true)
+        setLowHigh(false)
+        let newArr = hold_state.sort((a, b) => {
+        return b.rating - a.rating
+        })
+        setMarkers(newArr)
+
+      } else if(!lowHigh && highLow){
+        setHighLow(false)
+        setLowHigh(false)
+        setMarkers(hold_state)
+      } else {
+        setLowHigh(false)
+        setHighLow(true)
+
+        let newArr = hold_state.sort((a, b) => {
+        return b.rating - a.rating
+        })
+        setMarkers(newArr)
+      }
+      //lowHigh ? (setHighLow(true)) && (setLowHigh(false)) : setHighLow(true) && (setLowHigh(false))
+    }
+
+    let rating_low_high = () => {
+      if (!lowHigh && !highLow){
+        setHighLow(false)
+        setLowHigh(true)
+
+        let newArr = hold_state.sort((a, b) => {
+        return a.rating - b.rating
+        })
+        setMarkers(newArr)
+      } else if(lowHigh && !highLow){
+        setHighLow(false)
+        setLowHigh(false)
+        setMarkers(hold_state)
+      } else {
+        setLowHigh(true)
+        setHighLow(false)
+
+        let newArr = hold_state.sort((a, b) => {
+        return a.rating - b.rating
+        })
+        setMarkers(newArr)
+      }
+      //highLow ? (setLowHigh(true)) && (setHighLow(false)) : setLowHigh(true) && (setHighLow(false))
+    }
+
+    let find_by_distance = (curr_user_lat, curr_user_long) => {
+      if(nearby){
+        setNearby(false)
+        setMarkers(hold_state)
+      } else {
+        setNearby(true)
+        let newArr = hold_state.sort((a, b) => {
+          let first_distance = calculateDistance(curr_user_lat, curr_user_long) - calculateDistance(a.coordinate.latitude, a.coordinate.longitude)
+          let second_distance = calculateDistance(curr_user_lat, curr_user_long) - calculateDistance(b.coordinate.latitude, a.coordinate.longitude)
+          let result =  (first_distance) - (second_distance)
+          console.log(result)
+          return result
+          })
+        setMarkers(newArr)
+        
+      }
+      
+    }
+
+    let find_by_selected_value = (value) => {
+      if ( value != null){
+        let newArr = hold_state.filter(val => {
+        return val.category._id === value
+      })
+      setMarkers(newArr)
+      } else {
+        setMarkers(hold_state)
+      }
+      
+    }
+
+    const calculateDistance = (lat1, long1) => {
+      var dis = getPreciseDistance(
+        { latitude: 	lat1, longitude: long1 },
+        { latitude: 8.975073, longitude: 7.376306 }
+      );
+
+      var dis_in_km = dis / 1000
+      //alert(`Distance\n\n${dis} Meter\nOR\n${dis / 1000} KM`);
+      return dis_in_km
+    };
+    
     const renderModal = () => {
       return (
         <Modal
@@ -184,13 +318,9 @@ export default function Discover({ navigation }) {
                   <Text style={{ fontWeight: '700', marginBottom: 10, color: '#fff' }}>Categories</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                   <RNPickerSelect
-                      onValueChange={(value) => console.log(value)}
+                      onValueChange={(value) => find_by_selected_value(value)}
                       style={{color: '#fff'}}
-                      items={[
-                          { label: 'Carpenter', value: 'football' },
-                          { label: 'MakeUp Artist', value: 'baseball' },
-                          { label: 'Mechanic', value: 'hockey' },
-                      ]}
+                      items={catLabel}
                   />
                 </View>
               </View>
@@ -206,8 +336,8 @@ export default function Discover({ navigation }) {
                           right
                           checkedColor='#fff'
                           uncheckedColor='#fff'
-                          //onPress={() => this.filterByDate(today, 'today')}
-                          //checked={this.state.todayChecked}
+                          onPress={() => rating_high_low()}
+                          checked={highLow}
                       />
                   </View>
 
@@ -220,8 +350,8 @@ export default function Discover({ navigation }) {
                           right
                           checkedColor='#fff'
                           uncheckedColor='#fff'
-                          //onPress={() => this.filterByDate(tomorrow, 'tomorrow')}
-                          //checked={this.state.tomorrowChecked}
+                          onPress={() => rating_low_high()}
+                          checked={lowHigh}
                       />
                   </View>
               </View>
@@ -230,16 +360,19 @@ export default function Discover({ navigation }) {
                   <Text style={{ fontWeight: '700', marginBottom: 10, color: '#fff' }}>Distance</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Text style={{ color: '#fff' }}>Nearby</Text>
-                      <CheckBox
+                      {location !== null ? (
+                        <CheckBox
                           containerStyle={{ borderWidth: 0, paddingLeft: 0, backgroundColor: 'transparent', marginLeft: 0, marginRight: 0, padding: 0 }}
                           textStyle={{ fontWeight: 'normal', color: '#fff' }}
                           iconRight={true}
                           right
                           checkedColor='#fff'
                           uncheckedColor='#fff'
-                          //onPress={() => this.filterByDate(today, 'today')}
-                          //checked={this.state.todayChecked}
+                          onPress={() => find_by_distance(location.coords.latitude, location.coords.longitude)}
+                          checked={nearby}
                       />
+                      ) : null}
+                      
                   </View>
               </View>
           </View>
@@ -249,6 +382,10 @@ export default function Discover({ navigation }) {
     }
 
     return (
+      <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      >
         <View style={styles.container}>
           {renderModal()}
           <MapView
@@ -334,15 +471,15 @@ export default function Discover({ navigation }) {
               flexDirection: 'row',
             }}
             renderItem={({ item, index }) => (
-              <TouchableOpacity key={index}  onPress={() => navigation.navigate('bookmark')}>
+              <TouchableOpacity key={index}  onPress={() => navigation.navigate('business')}>
                 <View style={styles.card}  key={index}>
                   <Image
-                  source={item.image}
+                  source={{uri: item.image}}
                   style={styles.cardImage}
                   resizeMode="cover"
                   />
                   <View style={styles.textContent}>
-                  <Text numberOfLines={1} style={styles.cardtitle}>{item.name}</Text>
+                  <Text numberOfLines={1} style={styles.cardtitle}>{item.title}</Text>
                   <Text numberOfLines={1} style={styles.cardDescription}>
                       {item.description}
                   </Text>
@@ -367,8 +504,8 @@ export default function Discover({ navigation }) {
               />
           </Animated.ScrollView>
         </View>
+        </KeyboardAvoidingView>
       );
-
 }
 
 const styles = StyleSheet.create({
