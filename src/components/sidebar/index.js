@@ -35,7 +35,7 @@ export default function DrawerContent(props, user) {
             }}
             size={50}
           />
-          <Title style={styles.title}>{user.firstname} {user.lastname}</Title>
+          <Title style={styles.title}>{user.firstname.toUpperCase()} {user.lastname.toUpperCase()}</Title>
           {/* <Caption style={styles.caption}>@trensik</Caption> */}
         </View>
         <Drawer.Section style={styles.drawerSection}>
