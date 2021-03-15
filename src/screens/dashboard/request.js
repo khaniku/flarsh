@@ -99,7 +99,7 @@ const Request = (props) => {
           style={styles.headerStyle}
             transparent
           >
-         <Left style={{ flex: 1 }}>
+         <Left style={{ flex: 1}}>
             <Button style={styles.menuButton}  transparent onPress={() => props.navigation.openDrawer()}>
                 <MaterialCommunityIcons name="menu" size={30} color="black" />
             </Button>
@@ -165,8 +165,10 @@ const styles = StyleSheet.create({
     borderRadius: 50
   },
   menuButton: {
-    backgroundColor: '#fff', 
+    // backgroundColor: '#fff',
     shadowColor: "#000",
+    marginLeft: 8, 
+    marginTop: 10,
     shadowOffset: {
       width: 0,
       height: 4,

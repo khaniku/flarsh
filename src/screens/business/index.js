@@ -106,84 +106,84 @@ const saved = [
                 title="AB Rentals"
                 />
             </Appbar.Header>
-            <Content>
-            <View style={{ paddingTop: 10 }}>
+            <View>
+                <View style={{ paddingTop: 10 }}>
 
-{/** User Photo Stats**/}
-<View style={{ flexDirection: 'row' }}>
+                    {/** User Photo Stats**/}
+                    <View style={{ flexDirection: 'row' }}>
 
-    {/**User photo takes 1/3rd of view horizontally **/}
-    <View
-        style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Image source={Images[0]}
-            style={{ width: 75, height: 75, borderRadius: 37.5 }} />
+                        {/**User photo takes 1/3rd of view horizontally **/}
+                        <View
+                            style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <Image source={Images[0]}
+                                style={{ width: 75, height: 75, borderRadius: 37.5 }} />
 
-    </View>
+                        </View>
 
-    {/**User Stats take 2/3rd of view horizontally **/}
-    <View style={{ flex: 3 }}>
+                        {/**User Stats take 2/3rd of view horizontally **/}
+                        <View style={{ flex: 3 }}>
 
-        {/** Stats **/}
-        <View
-            style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'flex-end'
-            }}>
-            <View style={{ alignItems: 'center' }}>
-                <Text>20</Text>
-                <Text style={{ fontSize: 10, color: 'grey' }}>Posts</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-                <Text>205</Text>
-                <Text style={{ fontSize: 10, color: 'grey' }}>Followers</Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-                <Text>167</Text>
-                <Text style={{ fontSize: 10, color: 'grey' }}>Following</Text>
-            </View>
-        </View>
+                            {/** Stats **/}
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-around',
+                                    alignItems: 'flex-end'
+                                }}>
+                                <View style={{ alignItems: 'center' }}>
+                                    <Text>20</Text>
+                                    <Text style={{ fontSize: 10, color: 'grey' }}>Posts</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <Text>205</Text>
+                                    <Text style={{ fontSize: 10, color: 'grey' }}>Followers</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <Text>167</Text>
+                                    <Text style={{ fontSize: 10, color: 'grey' }}>Following</Text>
+                                </View>
+                            </View>
 
-        {/**Edit profile and Settings Buttons **/}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start', paddingTop: 10 }}>
+                            {/**Edit profile and Settings Buttons **/}
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start', paddingTop: 10 }}>
 
-            <View
-                style={{ flexDirection: 'row' }}>
+                                <View
+                                    style={{ flexDirection: 'row' }}>
 
-                {/** Edit profile takes up 3/4th **/}
-                    <Rating
-                        showRating
-                        type="star"
-                        fractions={1}
-                        startingValue={2.0}
-                        imageSize={14}
-                        showRating={false}
-                        //onFinishRating={this.ratingCompleted}
-                        />
-                
-            </View>
-        </View>{/**End edit profile**/}
-    </View>
-</View>
+                                    {/** Edit profile takes up 3/4th **/}
+                                        <Rating
+                                            showRating
+                                            type="star"
+                                            fractions={1}
+                                            startingValue={2.0}
+                                            imageSize={14}
+                                            showRating={false}
+                                            //onFinishRating={this.ratingCompleted}
+                                            />
+                                    
+                                </View>
+                            </View>{/**End edit profile**/}
+                        </View>
+                    </View>
 
-<View style={{ paddingBottom: 10 }}>
-    <View style={{ paddingHorizontal: 10 }}>
-        <Text style={{ fontWeight: 'bold' }}>Varun Nath</Text>
-        <Text>Lark | Computer Jock | Commercial Pilot</Text>
-        <Text>www.unsureprogrammer.com</Text>
-    </View>
-</View>
+                    <View style={{ paddingBottom: 10 }}>
+                        <View style={{ paddingHorizontal: 10 }}>
+                            <Text style={{ fontWeight: 'bold' }}>Varun Nath</Text>
+                            <Text>Lark | Computer Jock | Commercial Pilot</Text>
+                            <Text>www.unsureprogrammer.com</Text>
+                        </View>
+                    </View>
 
 
-</View>
+                    </View>
 
-            <View >
+                <View >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor: '#eae5e5' }}>
 
                     {renderSection()}
                 </View>
+                </View>
             </View>
-            </Content>
             
         </Container>
       );

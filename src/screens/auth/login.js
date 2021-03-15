@@ -33,7 +33,7 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
 }
 const successImageUri = 'https://cdn.pixabay.com/photo/2015/06/09/16/12/icon-803718_1280.png';
-const status = "production"; //change status to production for non testing
+const status = "dev"; //change status to production for non testing
 const client = "customer";
 
 export default function LoginScreen(props) {
@@ -180,7 +180,7 @@ export default function LoginScreen(props) {
                         console.log("here: "+err.message)
                     }
                 }else{
-                    setVerificationId(12345); 
+                    setVerificationId(123456); 
                 } 
             }else {
                 Alert.alert("Number is not valid");
@@ -210,50 +210,51 @@ export default function LoginScreen(props) {
         setVerificationCode(codeInput)
         try {
             setLoading(true)
-           //if(status == "production"){
+           if(status == "production"){
                 const credential = firebase.auth.PhoneAuthProvider.credential(
                 verificationId,
                 codeInput
                 );
                 const user = await firebase.auth().signInWithCredential(credential);
                 user;
-            //}
+            }
             console.log("Phone authentication successful");
             let number = null;
-            // const user = {user: {
-            //     "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
-            //     "appName": "[DEFAULT]",
-            //     "authDomain": "flarsh-c5380.firebaseapp.com",
-            //     "createdAt": "1590208476430",
-            //     "displayName": null,
-            //     "email": null,
-            //     "emailVerified": false,
-            //     "isAnonymous": false,
-            //     "lastLoginAt": "1590477366429",
-            //     "phoneNumber": "+19366689685",
-            //     "photoURL": null,
-            //     "providerData":  [
-            //        {
-            //         "displayName": null,
-            //         "email": null,
-            //         "phoneNumber": "+19366689685",
-            //         "photoURL": null,
-            //         "providerId": "phone",
-            //         "uid": "+19366689685",
-            //       },
-            //     ],
-            //     "redirectEventId": null,
-            //     "stsTokenManager":  {
-            //       "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMmM1NDk4YTcwYjc0MjQ5NzI2ZDhmYjYxODlkZWI3NGMzNWM4MGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmxhcnNoLWM1MzgwIiwiYXVkIjoiZmxhcnNoLWM1MzgwIiwiYXV0aF90aW1lIjoxNTkwNTU3ODE1LCJ1c2VyX2lkIjoiSFRpQ3p5djJ1eGF3RU5iMGpBSmhaN21LZnMxMyIsInN1YiI6IkhUaUN6eXYydXhhd0VOYjBqQUpoWjdtS2ZzMTMiLCJpYXQiOjE1OTA1NTk4MjMsImV4cCI6MTU5MDU2MzQyMywicGhvbmVfbnVtYmVyIjoiKzE5MzY2Njg5Njg1IiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJwaG9uZSI6WyIrMTkzNjY2ODk2ODUiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwaG9uZSJ9fQ.RV-_kdq1-JweW7tZAOES3sltS280ybI6Jo_pyBG83US7-bcJpHb1HTBGG2HyAO9p2yaiaOfYmk0GdYZU0F5sCnYcHrIbr4joBwuQWGPSVAHD4H-R0X4-zMk8rGOWzk300Nki-ki71yfQ8FZS7b5iuff_jvosg8KtqeSyr_iGCkZqFkIWHM05US1OA98pk02hQqS-tzF28ZLTZUiewhQKEriCHhJwiBz0Dtb1wi63sLahvFbIQ_IBh9_hYUK9FvKGLZik-nzP5GsUfXEIpBwOU1BS_4ebDNuSPh4vizS-xMFMistFsOtHWjuEKRWrALxOGpIQhSQSnawM0LvEfOHdhQ",
-            //       "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
-            //       "expirationTime": 1590561415300,
-            //       "refreshToken": "AE0u-NflgfnG_rLlRM8-coZSiXDTj2ynuQlk6gnknco7c91twMUY_0JbB7GOTstZydPrOHpFsBF8CZchKiwOtB7DflNs45_pT3G25aLnBhYArnwr4yy6LxMRzaCNkiHt3ut0scbgQg6nzbWrGTP1_xa3N_Ib7YaJT58gWxyHj8p30Kv9bAEbIYKqFxsdmecbnc65NGJOVd5c",
-            //     },
-            //     "tenantId": null,
-            //     "uid": "HTiCzyv2uxawENb0jAJhZ7mKfs13",
-            //   }}
+            const user = {user: {
+                "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
+                "appName": "[DEFAULT]",
+                "authDomain": "flarsh-c5380.firebaseapp.com",
+                "createdAt": "1590208476430",
+                "displayName": null,
+                "email": null,
+                "emailVerified": false,
+                "isAnonymous": false,
+                "lastLoginAt": "1590477366429",
+                "phoneNumber": "+19366689685",
+                "photoURL": null,
+                "providerData":  [
+                   {
+                    "displayName": null,
+                    "email": null,
+                    "phoneNumber": "+19366689685",
+                    "photoURL": null,
+                    "providerId": "phone",
+                    "uid": "+19366689685",
+                  },
+                ],
+                "redirectEventId": null,
+                "stsTokenManager":  {
+                  "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgyMmM1NDk4YTcwYjc0MjQ5NzI2ZDhmYjYxODlkZWI3NGMzNWM4MGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZmxhcnNoLWM1MzgwIiwiYXVkIjoiZmxhcnNoLWM1MzgwIiwiYXV0aF90aW1lIjoxNTkwNTU3ODE1LCJ1c2VyX2lkIjoiSFRpQ3p5djJ1eGF3RU5iMGpBSmhaN21LZnMxMyIsInN1YiI6IkhUaUN6eXYydXhhd0VOYjBqQUpoWjdtS2ZzMTMiLCJpYXQiOjE1OTA1NTk4MjMsImV4cCI6MTU5MDU2MzQyMywicGhvbmVfbnVtYmVyIjoiKzE5MzY2Njg5Njg1IiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJwaG9uZSI6WyIrMTkzNjY2ODk2ODUiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwaG9uZSJ9fQ.RV-_kdq1-JweW7tZAOES3sltS280ybI6Jo_pyBG83US7-bcJpHb1HTBGG2HyAO9p2yaiaOfYmk0GdYZU0F5sCnYcHrIbr4joBwuQWGPSVAHD4H-R0X4-zMk8rGOWzk300Nki-ki71yfQ8FZS7b5iuff_jvosg8KtqeSyr_iGCkZqFkIWHM05US1OA98pk02hQqS-tzF28ZLTZUiewhQKEriCHhJwiBz0Dtb1wi63sLahvFbIQ_IBh9_hYUK9FvKGLZik-nzP5GsUfXEIpBwOU1BS_4ebDNuSPh4vizS-xMFMistFsOtHWjuEKRWrALxOGpIQhSQSnawM0LvEfOHdhQ",
+                  "apiKey": "AIzaSyBr-cXyn6URqYaKMuNlGYXlo8wCoKdf3tQ",
+                  "expirationTime": 1590561415300,
+                  "refreshToken": "AE0u-NflgfnG_rLlRM8-coZSiXDTj2ynuQlk6gnknco7c91twMUY_0JbB7GOTstZydPrOHpFsBF8CZchKiwOtB7DflNs45_pT3G25aLnBhYArnwr4yy6LxMRzaCNkiHt3ut0scbgQg6nzbWrGTP1_xa3N_Ib7YaJT58gWxyHj8p30Kv9bAEbIYKqFxsdmecbnc65NGJOVd5c",
+                },
+                "tenantId": null,
+                "uid": "HTiCzyv2uxawENb0jAJhZ7mKfs13",
+              }}
               
             await checkPhoneNumber(phoneNumber).then(function (responseJson) {
+                console.log(responseJson)
                 number = responseJson
             })
             if(number) {
