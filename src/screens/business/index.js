@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { View, StyleSheet, Image, SafeAreaView, FlatList, StatusBar, Platform, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, SafeAreaView, ActivityIndicator, StatusBar, Platform, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
 import {Rating} from 'react-native-elements';
 import { Divider, TextInput  } from 'react-native-paper';
 import { Container, Segment, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Right, Body } from 'native-base';
@@ -13,6 +13,7 @@ import Modal from "react-native-modal";
 import {wrapIntoModal} from 'expo-modal';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Moment from 'moment';
+import { useSelector } from "react-redux";
 
 const saved = [
     {
@@ -45,12 +46,14 @@ const saved = [
   ]
 
    export default function business(props) {
+    const user = useSelector(state => state.user.userDetails);
     const [activeIndex, setActiveIndex] = useState(0);
     const [filterModal, setFilterModal] = useState(false);
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState(null);
     const [show, setShow] = useState(false);
     const [timeDisable, setTimeDisable] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [homeSpace, setHomeSpace] = useState(true)
     const [workSpace, setWorkSpace] = useState(false)
     const [imageModalStatus, setImageModalStatus] = useState(false)
@@ -121,6 +124,11 @@ const saved = [
                 {}
             )
         }
+    }
+
+    const handleAppointmentBooking = () => {
+        setIsLoading(true)
+        console.log(user)
     }
     const imageStatus = (image) => {
         setImageModalStatus(true)
@@ -234,8 +242,12 @@ const saved = [
                   />
                 </View>
               }
-
-              <Button style={{marginTop:30, justifyContent: 'center'}}><Text>Book now</Text></Button>
+               {(isLoading) ? (
+                   <Button style={{marginTop:30, justifyContent: 'center'}}><ActivityIndicator color="#fff" /></Button>
+               ) : (
+                   <Button style={{marginTop:30, justifyContent: 'center'}} onPress={handleAppointmentBooking} disabled={isLoading}><Text>Book now</Text></Button>
+               )}
+              
             </View>
 
         </Modal>
