@@ -1,0 +1,93 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add geolib
+
+PATH: 
+  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Ruby26-x64\bin;C:\Program Files\LLVM\bin;C:\xampp\php;C:\composer;C:\Program Files (x86)\Brackets\command;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Java\jdk1.8.0_211\bin;C:\Program Files\nodejs\;C:\Users\TOG\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\TOG\AppData\Local\Programs\Python\Python38-32\;C:\Ruby26-x64\bin;C:\Users\TOG\AppData\Local\Microsoft\WindowsApps;C:\Users\TOG\AppData\Local\atom\bin;C:\Users\TOG\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\TOG\AppData\Roaming\Composer\vendor\bin;C:\composer;C:\Users\TOG\AppData\Local\Yarn\bin;C:\Users\TOG\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\heroku\bin;C:\Program Files\Git\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\12\bin;C:\Program Files (x86)\ComposerSetup;C:\composer;C:\Users\TOG\AppData\Local\Programs\Python\Python38-32\Scripts;C:\Users\TOG\AppData\Local\Programs\Python\Python38-32;C:\Users\TOG\Desktop\redis\64bit;C:\Users\TOG\AppData\Roaming\npm;C:\Program Files\MongoDB\Server\4.2\bin;
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  10.17.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Users\TOG\Documents\flarsh_project\node_modules\@\node_modules\.bin'
+
+npm manifest: 
+  {
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web",
+      "eject": "expo eject"
+    },
+    "dependencies": {
+      "@": "react-navigation/drawer",
+      "@react-native-community/masked-view": "0.1.6",
+      "@react-navigation/bottom-tabs": "^5.4.2",
+      "@react-navigation/drawer": "^5.7.2",
+      "@react-navigation/material-bottom-tabs": "^5.2.2",
+      "@react-navigation/native": "^5.3.0",
+      "@react-navigation/stack": "^5.3.3",
+      "axios": "^0.19.2",
+      "expo": "~37.0.3",
+      "expo-firebase-recaptcha": "^1.1.0",
+      "expo-font": "~8.1.0",
+      "expo-image-picker": "~8.1.0",
+      "expo-location": "~8.1.0",
+      "expo-secure-store": "~8.1.0",
+      "firebase": "7.9.0",
+      "galio-framework": "^0.6.3",
+      "libphonenumber-js": "^1.7.50",
+      "moment": "^2.26.0",
+      "native-base": "2.13.8",
+      "payment-icons": "^1.2.1",
+      "react": "~16.9.0",
+      "react-dom": "~16.9.0",
+      "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
+      "react-native-animatable": "^1.3.3",
+      "react-native-confirmation-code-input": "^1.0.4",
+      "react-native-countdown-component": "^2.7.1",
+      "react-native-country-picker-modal": "^1.10.0",
+      "react-native-credit-card-input": "^0.4.1",
+      "react-native-elements": "^2.0.0",
+      "react-native-flash-message": "^0.1.15",
+      "react-native-gesture-handler": "~1.6.0",
+      "react-native-keyboard-aware-scroll-view": "^0.9.1",
+      "react-native-maps": "0.26.1",
+      "react-native-modal": "^11.5.6",
+      "react-native-paper": "^3.10.1",
+      "react-native-phone-input": "^0.2.4",
+      "react-native-picker-select": "^7.0.0",
+      "react-native-really-awesome-button": "^1.6.0",
+      "react-native-reanimated": "~1.7.0",
+      "react-native-responsive-screen": "^1.4.1",
+      "react-native-safe-area-context": "0.7.3",
+      "react-native-screens": "~2.2.0",
+      "react-native-web": "~0.11.7",
+      "react-native-webview": "8.1.1",
+      "react-phone-number-input": "^3.0.22",
+      "react-redux": "^7.2.0",
+      "redux": "^4.0.5",
+      "redux-persist": "^6.0.0",
+      "redux-thunk": "^2.3.0"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.8.6",
+      "babel-preset-expo": "~8.1.0",
+      "eslint": "^7.8.0",
+      "metro": "^0.59.0"
+    },
+    "private": true
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
