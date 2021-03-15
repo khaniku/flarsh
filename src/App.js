@@ -134,7 +134,7 @@ export default function App() {
         <Root>
           <PaperProvider>
             <NavigationContainer>
-              {token ? 
+              {token ?
                 <Home />
               : <Main/>}
               <FlashMessage position="top" /> 

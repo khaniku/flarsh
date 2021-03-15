@@ -1,6 +1,5 @@
-import * as Expo from "expo";
+import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
 import React, { Component } from "react";
 
 import App from "../App";
@@ -30,7 +29,7 @@ export default class Setup extends Component {
   }
   render() {
     if (!this.state.isReady) {
-      return <Expo.AppLoading />;
+      return <AppLoading />;
     }
     return (
         <App />

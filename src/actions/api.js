@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = "http://localhost:3000"
+const url = "http://localhost:9000"
 
 export function login(user, client){
     return fetch(url+"/auth/login", {
@@ -59,6 +59,7 @@ export const signup = ( user ) => {
             userType: user.userType
           })
           .then(res => {
+            console.log(res)
             return res.data;
           })
           .catch(err => {
@@ -182,3 +183,23 @@ export function checkEmail(email){
     console.log(error);
   });
 }
+
+export const allBusinesses = ( ) => {
+  return  axios.get(url+'/business/')
+          .then(res => {
+            return res.data;
+          })
+          .catch(err => {
+            console.log(err.message)
+    });
+};
+
+export const allCategory = ( ) => {
+  return  axios.get(url+'/category/')
+          .then(res => {
+            return res.data;
+          })
+          .catch(err => {
+            console.log(err.message)
+    });
+};
