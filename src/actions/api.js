@@ -23,32 +23,6 @@ export function login(user, client){
     });
 }
 
-// export function signup(user){
-//     return fetch(url+"/auth/signup", {
-//       method: 'POST',
-//       headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({
-//         phoneNumber: user.phoneNumber,
-//         firstname: user.firstName,
-//         lastname: user.lastName,
-//         email: user.email,
-//         userResp: user.userResp,
-//         userType: user.userType
-//       })
-//     })
-//     .then((response) => response.json())
-//     .then((responseJson) => {
-//         console.log(responseJson)
-//         return responseJson;
-//     })
-//     .catch((error) => {
-//         console.log(error);
-//     });
-// }
-
 export const signup = ( user ) => {
   return  axios.post(url+'/auth/signup', {
             phoneNumber: user.phoneNumber,
