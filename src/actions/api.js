@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = "http://192.168.8.103:9000"
+const url = "http://192.168.8.101:9000"
 
 export function login(user, client){
     return fetch(url+"/auth/login", {
@@ -194,6 +194,16 @@ export const allBusinesses = ( ) => {
     });
 };
 
+export const oneBusiness = ( business_id ) => {
+  return  axios.get(url+'/business/'+business_id)
+          .then(res => {
+            return res.data;
+          })
+          .catch(err => {
+            return {error: err.request._response}
+    });
+};
+
 export const allCategory = ( ) => {
   return  axios.get(url+'/category/')
           .then(res => {
@@ -201,5 +211,16 @@ export const allCategory = ( ) => {
           })
           .catch(err => {
             console.log(err.message)
+    });
+};
+
+export const newAppointment = ( data ) => {
+  return  axios.post(url+'/appointment/new', data)
+          .then(res => {
+            return res.data;
+          })
+          .catch(err => {
+            return {error: err.request._response}
+            //console.log(err.request._response)
     });
 };

@@ -471,7 +471,9 @@ export default function Discover({ navigation }) {
               flexDirection: 'row',
             }}
             renderItem={({ item, index }) => (
-              <TouchableOpacity key={index}  onPress={() => navigation.navigate('business')}>
+              <TouchableOpacity key={index}  onPress={() => navigation.navigate('business', {
+                businessId: item._id
+              })}>
                 <View style={styles.card}  key={index}>
                   <Image
                   source={{uri: item.image}}

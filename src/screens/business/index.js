@@ -1,7 +1,7 @@
-import React, { Component, useState } from 'react';
-import { View, StyleSheet, Image, SafeAreaView, ActivityIndicator, StatusBar, Platform, Dimensions, TouchableHighlight, TouchableOpacity } from 'react-native';
-import {Rating} from 'react-native-elements';
-import { Divider, TextInput  } from 'react-native-paper';
+import React, { Component, useState, useEffect } from 'react';
+import { View, StyleSheet , TextInput, Image, SafeAreaView, ActivityIndicator, StatusBar, Platform, Dimensions, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView  } from 'react-native';
+import {Rating, Input } from 'react-native-elements';
+import { Divider  } from 'react-native-paper';
 import { Container, Segment, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Right, Body } from 'native-base';
 import { Appbar } from 'react-native-paper';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -14,6 +14,7 @@ import {wrapIntoModal} from 'expo-modal';
 import DateTimePicker from "react-native-modal-datetime-picker";
 import Moment from 'moment';
 import { useSelector } from "react-redux";
+import {newAppointment, oneBusiness} from "../../actions/api";
 
 const saved = [
     {
@@ -56,11 +57,20 @@ const saved = [
     const [isLoading, setIsLoading] = useState(false)
     const [homeSpace, setHomeSpace] = useState(true)
     const [workSpace, setWorkSpace] = useState(false)
+    const [other, setOther] = useState(false)
     const [imageModalStatus, setImageModalStatus] = useState(false)
     const [currentImage, setCurrentImage] = useState("")
     const [isDateTimePickerVisible, setIsDateTimePickerVisible] = useState(false)
     const [due_date, setDue_date] = useState("")
+    const [appointmentDate, setAppointmentDate] = useState("")
+    const [appointmentTime, setAppointmentTime] = useState("")
+    const [appointmentType, setAppointmentType] = useState("Home Space")
+    const [appointmentLocation, setAppointmentLocation] = useState("")
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+    const [businessImages, setBusinessImages] = useState([])
 
+    const businessId = props.route.params.businessId
+    const userId = user.uid
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -84,8 +94,15 @@ const saved = [
     const handleDatePicked = date => {
         setDue_date(date)
         hideDateTimePicker()
+        let d = new Date(date)
+        let setDate = d.getFullYear() + "-" + ('0'+ (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2)
+        let setTime = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)
+        setAppointmentDate(setDate)
+        setAppointmentTime(setTime)
+        setIsButtonDisabled(false)
+        //console.log(Moment(date).format("HH:mm"))
     };
-
+    
     const showDatepicker = () => {
         showMode('date');
         setTimeDisable(false)
@@ -100,16 +117,27 @@ const saved = [
         setActiveIndex(index)
     }
 
-    const workSpaceCheck = () => {
-        if (homeSpace && !workSpace) {
+    const workSpaceCheck = (type) => {
+        if (homeSpace && !workSpace || other) {
             setHomeSpace(false)
             setWorkSpace(true)
+            setOther(false)
         }
     }
 
-    const homeSpaceCheck = () => {
-        if (!homeSpace && workSpace) {
+    const homeSpaceCheck = (type) => {
+        if (!homeSpace && workSpace || other) {
             setHomeSpace(true)
+            setWorkSpace(false)
+            setAppointmentType(type)
+            setOther(false)
+        }
+    }
+
+    const otherChecked = (type) => {
+        if (!other && workSpace || homeSpace) {
+            setOther(true)
+            setHomeSpace(false)
             setWorkSpace(false)
         }
     }
@@ -126,16 +154,50 @@ const saved = [
         }
     }
 
+    const obj = {
+        business_id: businessId,
+        user_id: userId,
+        date_of_appointment: appointmentDate,
+        time_of_appointment: appointmentTime,
+        type_of_service: appointmentType,
+        appointment_location: appointmentLocation,
+        due_date: due_date
+    }
     const handleAppointmentBooking = () => {
         setIsLoading(true)
-        console.log(user)
+        newAppointment(obj).then((data) => { 
+            if(data.error){
+                alert(data.error)
+            } else {
+                
+                alert('Your appointment request has been sent.')
+            }
+            
+            setIsLoading(false)
+          })
     }
     const imageStatus = (image) => {
         setImageModalStatus(true)
         setCurrentImage(image)
     }
+
+    useEffect(() => {
+        oneBusiness(businessId).then((data) => {
+            if(data.error){
+                alert(data.error)
+            } else {
+                let imageArray = []
+                data.uploads.map(value => {
+                    let imageObject = {}
+                    imageObject['uri'] = value
+                    imageArray.push(imageObject)
+                })
+                setBusinessImages(imageArray)
+            }
+        })
+    }, [])
     const renderSectionOne = () => {
-        return Images.map((image, index) => {
+        return businessImages.map((image, index) => {
             return (
                 <TouchableHighlight
                 onPress = {() => imageStatus(image)}
@@ -183,7 +245,8 @@ const saved = [
     }
     const renderModal = () => {
         return (
-        <Modal
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                <Modal
             isVisible={filterModal}
             style={{ backgroundColor: '#694fad', borderRadius: 10, marginHorizontal: 30, marginVertical: (height - 400) / 2 }}
             deviceHeight={height}
@@ -205,7 +268,7 @@ const saved = [
                           checkedColor='#fff'
                           uncheckedColor='#fff'
                           checked={homeSpace}
-                          onPress={homeSpaceCheck}
+                          onPress={() => homeSpaceCheck('Home Space')}
                       />
                   </View>
 
@@ -219,12 +282,35 @@ const saved = [
                           checkedColor='#fff'
                           uncheckedColor='#fff'
                           checked={workSpace}
-                          onPress={workSpaceCheck}
+                          onPress={() => workSpaceCheck("Work Space")}
                       />
                   </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text style={{ color: '#fff' }}>Other</Text>
+                      <CheckBox
+                          containerStyle={{ borderWidth: 0, paddingLeft: 0, backgroundColor: 'transparent', marginLeft: 0, marginRight: 0, padding: 0 }}
+                          textStyle={{ fontWeight: 'normal', color: '#fff' }}
+                          iconRight={true}
+                          right
+                          checkedColor='#fff'
+                          uncheckedColor='#fff'
+                          checked={other}
+                          onPress={() => otherChecked("Other")}
+                      />
+                  </View>
+                  {other ? (
+                      <View>
+                            <Divider style={{height: 1, marginBottom: 3, backgroundColor: '#bdbdbd'}} />
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Input onChangeText={(e) => setAppointmentLocation(e)} label='Appointment address:' inputStyle={{}} inputContainerStyle={{ borderRadius: 10, paddingHorizontal: 10, borderWidth: 1, borderColor: '#fff', height: 30 }} labelStyle={{ color: '#fff', fontSize: 14, fontWeight: '600', marginBottom: 7 }} />
+                            </View>
+                            <Divider style={{height: 1, marginBottom: 3, backgroundColor: '#bdbdbd'}} />
+                      </View>
+                  ) : null}
+                  
               </View>
               {
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
                   <Icon style={{ fontSize: 15, marginRight: 10, color: '#fff' }} name='insert-invitation' type='MaterialIcons' />
                   <Text style={{ fontWeight: '600', marginRight: 20, color: '#fff', fontSize: 14 }}>Select Day:</Text>
                   <TouchableOpacity onPress={showDateTimePicker} style={{ borderColor: '#E5E5E5', borderRadius: 10, borderWidth: 1.5, alignItems: 'center', justifyContent: 'space-between', flex: 1, flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5, marginRight: 5 }}>
@@ -238,19 +324,29 @@ const saved = [
                       onConfirm={handleDatePicked}
                       onCancel={hideDateTimePicker}
                       mode='datetime'
+                      is24Hour={true}
                       display={Platform.OS === "ios" ? "inline" : "default"}
                   />
                 </View>
               }
                {(isLoading) ? (
                    <Button style={{marginTop:30, justifyContent: 'center'}}><ActivityIndicator color="#fff" /></Button>
-               ) : (
-                   <Button style={{marginTop:30, justifyContent: 'center'}} onPress={handleAppointmentBooking} disabled={isLoading}><Text>Book now</Text></Button>
+               ) : (other) ? (
+                   <View style={{marginTop:10, display: "flex", flexDirection: "column",justifyContent: 'center',  alignItems: "center"}}>
+                       <Button style={{width:'50%', justifyContent: 'center',  alignItems: "center"}} onPress={handleAppointmentBooking} disabled={isButtonDisabled}><Text>Book now</Text></Button>
+                   </View>
+                   
+               ): (
+                    <View style={{marginTop:70, display: "flex", flexDirection: "column",justifyContent: 'center',  alignItems: "center"}}>
+                        <Button style={{width:'50%', justifyContent: 'center',  alignItems: "center"}} onPress={handleAppointmentBooking} disabled={isButtonDisabled}><Text>Book now</Text></Button>
+                    </View>
                )}
               
             </View>
 
         </Modal>
+            </KeyboardAvoidingView>
+        
       )
     }
 
@@ -343,9 +439,6 @@ const saved = [
             //onFinishRating={this.ratingCompleted}
             />
         </View>
-            
-        <Text>Lark | Computer Jock | Commercial Pilot</Text>
-        <Text>www.unsureprogrammer.com</Text>
     </View>
 </View>
 
