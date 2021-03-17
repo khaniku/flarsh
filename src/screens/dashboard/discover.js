@@ -113,10 +113,13 @@ export default function Discover({ navigation }) {
         })();
 
         allBusinesses().then(function (data) { 
+          console.log(data)
           setMarkers(data)
           setHoldMarkers(data)
         })
         allCategory().then(function (data) { 
+          console.log("data")
+          console.log(data)
           let arr = []
           data.map(val => {
             let obj = {}
