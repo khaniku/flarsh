@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = "http://192.168.8.101:9000"
+const url = "http://192.168.8.100:9000"
 
 export function login(user, client){
     return fetch(url+"/auth/login", {

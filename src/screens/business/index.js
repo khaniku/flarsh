@@ -68,6 +68,7 @@ const saved = [
     const [appointmentLocation, setAppointmentLocation] = useState("")
     const [isButtonDisabled, setIsButtonDisabled] = useState(true)
     const [businessImages, setBusinessImages] = useState([])
+    const [business, setBusiness] = useState({})
 
     const businessId = props.route.params.businessId
     const userId = user.uid
@@ -193,30 +194,38 @@ const saved = [
                     imageArray.push(imageObject)
                 })
                 setBusinessImages(imageArray)
+                setBusiness(data)
             }
         })
     }, [])
     const renderSectionOne = () => {
-        return businessImages.map((image, index) => {
+        if (businessImages.length > 0){
+            return businessImages.map((image, index) => {
+                return (
+                    <TouchableHighlight
+                    onPress = {() => imageStatus(image)}
+                    >
+                        <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
+                            <Image style={{
+                                flex: 1,
+                                alignSelf: 'stretch',
+                                width: undefined,
+                                height: undefined,
+    
+                            }}
+                                source={image}>
+                            </Image>
+                        </View>
+                    </TouchableHighlight>
+                    
+                )
+            })
+        } else {
             return (
-                <TouchableHighlight
-                onPress = {() => imageStatus(image)}
-                >
-                    <View key={index} style={[{ width: (width) / 3 }, { height: (width) / 3 }, { marginBottom: 2 }, index % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }]}>
-                        <Image style={{
-                            flex: 1,
-                            alignSelf: 'stretch',
-                            width: undefined,
-                            height: undefined,
-
-                        }}
-                            source={image}>
-                        </Image>
-                    </View>
-                </TouchableHighlight>
-                
+                <Text>No post yet.</Text>
             )
-        })
+        }
+        
 
     }
 
@@ -386,7 +395,7 @@ const saved = [
     {/**User photo takes 1/3rd of view horizontally **/}
     <View
         style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Image source={Images[0]}
+        <Image source={{uri: business.image}}
             style={{ width: 75, height: 75, borderRadius: 37.5 }} />
 
     </View>
@@ -427,13 +436,13 @@ const saved = [
 
 <View style={{ paddingBottom: 10 }}>
     <View style={{ paddingHorizontal: 10 }}>
-        <Text style={{ fontWeight: 'bold' }}>Varun Nath</Text>
+        <Text style={{ fontWeight: 'bold' }}>{business.title}</Text>
         <View style={{alignItems:"flex-start"}}>
         <Rating
             showRating
             type="star"
             fractions={1}
-            startingValue={2.0}
+            startingValue={business.rating}
             imageSize={14}
             showRating={false}
             //onFinishRating={this.ratingCompleted}

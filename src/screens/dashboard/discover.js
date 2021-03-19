@@ -303,6 +303,10 @@ export default function Discover({ navigation }) {
       //alert(`Distance\n\n${dis} Meter\nOR\n${dis / 1000} KM`);
       return dis_in_km
     };
+
+    const loadMoreData = () => {
+      console.log(2132)
+    }
     
     const renderModal = () => {
       return (
@@ -470,9 +474,7 @@ export default function Discover({ navigation }) {
           >
             <FlatList
             data={markers}
-            contentContainerStyle={{
-              flexDirection: 'row',
-            }}
+            horizontal
             renderItem={({ item, index }) => (
               <TouchableOpacity key={index}  onPress={() => navigation.navigate('business', {
                 businessId: item._id
@@ -494,7 +496,7 @@ export default function Discover({ navigation }) {
                       showRating
                       type="star"
                       fractions={1}
-                      startingValue={2.0}
+                      startingValue={item.rating}
                       imageSize={14}
                       showRating={false}
                       // onFinishRating={this.ratingCompleted}
@@ -506,6 +508,11 @@ export default function Discover({ navigation }) {
 
               )}
               keyExtractor={(item, index) => index.toString()}
+              onEndReached={() => {
+                console.log(456576)
+            }}
+            onEndReachedThreshold={0.5}
+            initialNumToRender={10}
               />
           </Animated.ScrollView>
         </View>
