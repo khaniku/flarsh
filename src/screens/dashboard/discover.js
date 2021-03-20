@@ -104,22 +104,20 @@ export default function Discover({ navigation }) {
 
     
     let hold_state = holdMarkers
-    useEffect( () => {
+    useEffect(() => {
 
         (async () => {
           let location = await Location.getCurrentPositionAsync({});
           setLocation(location)
-          console.log(location)
         })();
 
-        allBusinesses().then(function (data) { 
-          console.log(data)
-          setMarkers(data)
-          setHoldMarkers(data)
-        })
+        (async () => { 
+          let business = await allBusinesses();
+          setMarkers(business)
+          setHoldMarkers(business)
+        })();
+
         allCategory().then(function (data) { 
-          console.log("data")
-          console.log(data)
           let arr = []
           data.map(val => {
             let obj = {}
@@ -130,31 +128,35 @@ export default function Discover({ navigation }) {
           })
           setCatLabel(arr)
         })
-        animation.addListener(({ value }) => {
-            let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-            if (index >= markers.length) {
-                index = markers.length - 1;
-            }
-            if (index <= 0) {
-              index = 0;
-            }
-            clearTimeout(regionTimeout);
-            regionTimeout = setTimeout(() => {
-              if (stateIndex !== index) {
-                setStateIndex(index);
-                const { coordinate } = markers[index];
-                mapRef.current.animateToRegion(
-                  {
-                    ...coordinate,
-                    latitudeDelta: region.latitudeDelta,
-                    longitudeDelta: region.longitudeDelta,
-                  },
-                  350
-                );
-              }
-            }, 0.5);
-        });
       }, [])
+
+    useEffect(() => {
+      animation.addListener(({ value }) => {
+        let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+        if (index >= markers.length) {
+            index = markers.length - 1;
+        }
+
+        if (index <= 0) {
+          index = 0;
+        }
+        clearTimeout(regionTimeout);
+        regionTimeout = setTimeout(() => {
+          if (stateIndex !== index) {
+            setStateIndex(index);
+            const { coordinate } = markers[index];
+            mapRef.current.animateToRegion(
+              {
+                ...coordinate,
+                latitudeDelta: region.latitudeDelta,
+                longitudeDelta: region.longitudeDelta,
+              },
+              350
+            );
+          }
+        }, 0.5);
+    });
+    }, [markers, stateIndex])
       
     const openFilter = () => {
       setFilterModal(true);
@@ -452,7 +454,7 @@ export default function Discover({ navigation }) {
                     <Icon name='filter-list' type='MaterialIcons' style={{ color: '#694fad' }} onPress={() => openFilter()} />
                 </View>
               </View>
-          <Animated.ScrollView
+          {/* <Animated.ScrollView
             horizontal
             scrollEventThrottle={1}
             showsHorizontalScrollIndicator={false}
@@ -471,10 +473,29 @@ export default function Discover({ navigation }) {
             )}
             style={styles.scrollView}
             contentContainerStyle={styles.endPadding}
-          >
-            <FlatList
+          > */}
+            <Animated.FlatList
             data={markers}
             horizontal
+            scrollEventThrottle={1}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={CARD_WIDTH}
+            onScroll={
+              Animated.event(
+                [
+                  {
+                    nativeEvent: {
+                      contentOffset: {
+                        x: animation,
+                      },
+                    },
+                  },
+                ],
+                { useNativeDriver: true }
+              )
+            }
+            style={styles.scrollView}
+            contentContainerStyle={styles.endPadding}
             renderItem={({ item, index }) => (
               <TouchableOpacity key={index}  onPress={() => navigation.navigate('business', {
                 businessId: item._id
@@ -514,7 +535,7 @@ export default function Discover({ navigation }) {
             onEndReachedThreshold={0.5}
             initialNumToRender={10}
               />
-          </Animated.ScrollView>
+          {/* </Animated.ScrollView> */}
         </View>
         </KeyboardAvoidingView>
       );
@@ -699,8 +720,10 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   menuButton: {
-    backgroundColor: '#fff', 
+    // backgroundColor: '#fff', 
     shadowColor: "#000",
+    marginLeft: 8, 
+    marginTop: 10,
     shadowOffset: {
       width: 0,
       height: 4,
