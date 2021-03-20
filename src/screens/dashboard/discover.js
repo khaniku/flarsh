@@ -720,7 +720,11 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   menuButton: {
+<<<<<<< HEAD
     // backgroundColor: '#fff', 
+=======
+    // backgroundColor: '#fff',
+>>>>>>> 890463364b633aefc96074c1d6afee370964a894
     shadowColor: "#000",
     marginLeft: 8, 
     marginTop: 10,
@@ -732,4 +736,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 8
   }
-  });
+});
