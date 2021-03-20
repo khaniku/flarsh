@@ -454,26 +454,6 @@ export default function Discover({ navigation }) {
                     <Icon name='filter-list' type='MaterialIcons' style={{ color: '#694fad' }} onPress={() => openFilter()} />
                 </View>
               </View>
-          {/* <Animated.ScrollView
-            horizontal
-            scrollEventThrottle={1}
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={CARD_WIDTH}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: {
-                    contentOffset: {
-                      x: animation,
-                    },
-                  },
-                },
-              ],
-              { useNativeDriver: true }
-            )}
-            style={styles.scrollView}
-            contentContainerStyle={styles.endPadding}
-          > */}
             <Animated.FlatList
             data={markers}
             horizontal
@@ -535,7 +515,6 @@ export default function Discover({ navigation }) {
             onEndReachedThreshold={0.5}
             initialNumToRender={10}
               />
-          {/* </Animated.ScrollView> */}
         </View>
         </KeyboardAvoidingView>
       );
@@ -720,11 +699,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   menuButton: {
-<<<<<<< HEAD
     // backgroundColor: '#fff', 
-=======
-    // backgroundColor: '#fff',
->>>>>>> 890463364b633aefc96074c1d6afee370964a894
     shadowColor: "#000",
     marginLeft: 8, 
     marginTop: 10,
