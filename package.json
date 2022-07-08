@@ -28,7 +28,7 @@
     "galio-framework": "^0.6.3",
     "geolib": "^3.3.1",
     "libphonenumber-js": "^1.7.50",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "native-base": "2.13.8",
     "payment-icons": "^1.2.1",
     "react": "~16.9.0",
